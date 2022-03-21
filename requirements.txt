@@ -3,3 +3,5 @@ Pyrogram
 asyncio
 datetime
 TgCrypto
+requests
+watchdog

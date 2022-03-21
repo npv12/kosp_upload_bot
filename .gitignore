@@ -3,3 +3,4 @@ config.ini
 *.session*
 venv/
 .vscode/
+DumpsterFire/
