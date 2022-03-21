@@ -4,7 +4,13 @@ from pyrogram import Client
 
 from . import __version__
 
+from watchgod import watch
+import sys
+from os import execle, environ
+
+
 class KOSP(Client):
+
     def __init__(self):
         name = self.__class__.__name__.lower()
         config_file = "config.ini"

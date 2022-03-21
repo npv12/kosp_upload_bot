@@ -28,6 +28,6 @@ else:
     # Pyrogram details
     API_ID = config.get(NAME, 'API_ID')
     API_HASH = config.get(NAME, "API_HASH")
-    BOT_TOKEN = config.get(NAME,"BOT_TOKEN")
+    BOT_TOKEN = config.get(NAME, "BOT_TOKEN")
 
 print("Env set properly")
