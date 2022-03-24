@@ -4,3 +4,5 @@ config.ini
 venv/
 .vscode/
 DumpsterFire/
+credentials.json
+settings.yaml

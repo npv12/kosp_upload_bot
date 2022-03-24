@@ -26,7 +26,6 @@ class DirectLink(DocumentProccesor):
                 progress: int = round(len(data) / content_length * 100, 2)
                 print(progress)
 
-            open(local_filename, 'wb').write(data)
             await message.edit_text("Downloaded successfully")
             return local_filename
 

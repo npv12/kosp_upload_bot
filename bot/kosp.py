@@ -4,10 +4,6 @@ from pyrogram import Client
 
 from . import __version__
 
-from watchgod import watch
-import sys
-from os import execle, environ
-
 
 class KOSP(Client):
 
