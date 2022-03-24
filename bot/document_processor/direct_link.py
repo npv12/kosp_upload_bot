@@ -5,23 +5,31 @@ import os
 
 class DirectLink(DocumentProccesor):
 
-    def download(self, url: str) -> str:
+    async def download(self, url: str, message) -> str:
 
         temp_folder_path: str = "./DumpsterFire/"
 
-        if not os.path.exists(temp_folder_path):
-            os.mkdir(temp_folder_path)
+        try:
 
-        local_filename: str = temp_folder_path + url.split('/')[-1]
-        res = requests.get(url, stream=True, allow_redirects=True)
-        content_length = int(res.headers['Content-Length'])
+            if not os.path.exists(temp_folder_path):
+                os.mkdir(temp_folder_path)
 
-        data = b''
+            local_filename: str = temp_folder_path + url.split('/')[-1]
+            res = requests.get(url, stream=True, allow_redirects=True)
+            content_length = int(res.headers['Content-Length'])
 
-        for chunk in res.iter_content(chunk_size=1024 * 1024 * 10):
-            if (chunk):
-                data += chunk
-            print(len(data) / content_length)
+            data = b''
 
-        open(local_filename, 'wb').write(data)
-        return local_filename
+            for chunk in res.iter_content(chunk_size=1024 * 1024 * 10):
+                if (chunk):
+                    data += chunk
+                progress: int = round(len(data) / content_length * 100, 2)
+                print(progress)
+
+            open(local_filename, 'wb').write(data)
+            await message.edit_text("Downloaded successfully")
+            return local_filename
+
+        except:
+            await message.edit_text("Download failed")
+        return None

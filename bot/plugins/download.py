@@ -17,6 +17,5 @@ async def download(client, message):
     download_url: str = message.command[1]
     handler: DocumentProccesor = DocumentProcessorFactory.create_document_processor(
         download_url)
-    await message.reply_text("Starting the download for you")
-    handler.download(download_url)
-    await message.reply_text("Download is complete")
+    replied_message = await message.reply_text("Starting the download for you")
+    await handler.download(download_url, replied_message)

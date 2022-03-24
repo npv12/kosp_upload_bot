@@ -9,11 +9,11 @@ class DocumentProccesor(ABC):
         upload: Uploads the given file to gdrive. The file is deleted after the upload.
     """
 
-    def download(self, url: str) -> str:
+    def download(self, url: str, message) -> str:
         """Downloads the file from the given url and stores it in a temporary location.
         Args:
             url: The url of the file to be downloaded.
-            folder_name: Name of the folder where the downloaded file will be stored
+            message: The message to edit to show the progress of the download.
         """
         pass
 
