@@ -4,4 +4,4 @@ asyncio
 datetime
 TgCrypto
 requests
-watchdog
+pydrive
