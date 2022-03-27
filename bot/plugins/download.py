@@ -15,12 +15,17 @@ async def download(client, message):
         return
 
     download_url: str = message.command[1]
-    replied_message = await message.reply_text("Starting the download for you")
-    handler: DocumentProccesor = DocumentProcessorFactory.create_document_processor(
-        download_url, replied_message)
+    try:
+        replied_message = await message.reply_text(
+            "Starting the download for you")
+        handler: DocumentProccesor = DocumentProcessorFactory.create_document_processor(
+            download_url, replied_message)
 
-    file_name: str = await handler.download(download_url)
-    await replied_message.edit_text("Downloaded file at " + file_name)
+        file_name: str = await handler.download(download_url)
+        await replied_message.edit_text("Downloaded file at " + file_name)
+    except:
+        await message.reply_text(
+            "Download failed.\nPlease check the link and try again")
 
 
 @Client.on_message(
@@ -34,8 +39,13 @@ async def mirror(client, message):
         return
 
     download_url: str = message.command[1]
-    replied_message = await message.reply_text("Starting the download for you")
-    handler: DocumentProccesor = DocumentProcessorFactory.create_document_processor(
-        download_url, replied_message)
-    file_name = await handler.download(download_url)
-    await handler.upload(file_name)
+    try:
+        replied_message = await message.reply_text(
+            "Starting the download for you")
+        handler: DocumentProccesor = DocumentProcessorFactory.create_document_processor(
+            download_url, replied_message)
+        file_name = await handler.download(download_url)
+        await handler.upload(file_name)
+    except:
+        await message.reply_text(
+            "Mirror failed.\nPlease check the link and try again")

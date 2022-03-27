@@ -1,3 +1,4 @@
+from email import message
 import httpx
 from bot.document_processor.base import DocumentProccesor
 import os
@@ -15,20 +16,27 @@ class DirectLink(DocumentProccesor):
                 os.mkdir(temp_folder_path)
 
             local_filename: str = temp_folder_path + url.split('/')[-1]
-            res = httpx.get(url)
-            content_length = int(res.headers['Content-Length'])
+            try:
+                res = httpx.get(url)
+                content_length = int(res.headers['Content-Length'])
+            except:
+                await message.edit_text("Unable to connect to the server")
 
             data = b''
 
-            for chunk in res.iter_bytes(chunk_size=1024 * 1024 * 10):
-                if (chunk):
-                    data += chunk
-                progress: int = round(len(data) / content_length * 100, 2)
-                print(progress)
+            try:
 
-            binary_file = open(local_filename, "wb")
-            binary_file.write(data)
-            binary_file.close()
+                for chunk in res.iter_bytes(chunk_size=1024 * 1024 * 10):
+                    if (chunk):
+                        data += chunk
+                    progress: int = round(len(data) / content_length * 100, 2)
+                    print(progress)
+
+                binary_file = open(local_filename, "wb")
+                binary_file.write(data)
+                binary_file.close()
+            except:
+                await message.edit_text("Failed to download the file")
 
             await self.message.edit_text("Downloaded successfully")
             return local_filename

@@ -37,43 +37,54 @@ class DocumentProccesor(ABC):
 
         # Upload path of the final file
         file_upload_path = parse_kosp(file_name)
-        print(file_upload_path)
 
-        # Use the context manager to manage a session instance
-        my_drive = OneDrive(CLIENT_ID, CLIENT_SECRET, TENANT,
-                            "http://localhost:8080", REFRESH_TOKEN)
+        try:
+
+            # Use the context manager to manage a session instance
+            my_drive = OneDrive(CLIENT_ID, CLIENT_SECRET, TENANT,
+                                "http://localhost:8080", REFRESH_TOKEN)
+
+        except:
+            print("Failed to login to OneDrive")
+            return False
 
         # Get the details of all the items in the root directory
 
         dir_to_travel: List[str] = file_upload_path.split("/")
-
-        items = my_drive.list_directory()
-
         # Search through the root directory to find the file
         parent_folder_id = None
         dest_folder_id = None
 
-        for folder in dir_to_travel:
-            dest_folder_id = None
-            for item in items:
-                if "folder" in item and item.get("name") == folder:
-                    dest_folder_id = item["id"]
-                    break
+        try:
+            items = my_drive.list_directory()
+            for folder in dir_to_travel:
+                dest_folder_id = None
+                for item in items:
+                    if "folder" in item and item.get("name") == folder:
+                        dest_folder_id = item["id"]
+                        break
 
-            if dest_folder_id is None:
-                dest_folder_id = my_drive.make_folder(folder, parent_folder_id)
+                if dest_folder_id is None:
+                    dest_folder_id = my_drive.make_folder(
+                        folder, parent_folder_id)
 
-            items = my_drive.list_directory(dest_folder_id)
-            parent_folder_id = dest_folder_id
+                items = my_drive.list_directory(dest_folder_id)
+                parent_folder_id = dest_folder_id
 
-        # Upload the file
-        new_file_id = await my_drive.upload_file(
-            file_path=file_name,
-            parent_folder_id=dest_folder_id,
-            verbose=False,
-            callback=self.__callback__)
-
-        print("Upload complete")
+            # Upload the file
+            new_file_id = await my_drive.upload_file(
+                file_path=file_name,
+                parent_folder_id=dest_folder_id,
+                verbose=False,
+                callback=self.__callback__)
+        except:
+            print("Failed to upload file")
+            return False
 
     async def __callback__(self, progress: int, total: int):
         print(progress / total)
+        content: str = "Uploading file... " + str(progress / total * 100) + "%"
+        try:
+            await self.message.edit_text(content)
+        except Exception as e:
+            print(content)
