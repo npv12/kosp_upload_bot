@@ -1,6 +1,9 @@
 from abc import ABC, abstractmethod
-from pydrive.auth import GoogleAuth
-from pydrive.drive import GoogleDrive
+from typing import List
+from graph_onedrive import OneDrive
+from bot import CLIENT_ID, CLIENT_SECRET, TENANT, REFRESH_TOKEN
+
+from bot.parser import parse_kosp
 
 
 class DocumentProccesor(ABC):
@@ -11,9 +14,13 @@ class DocumentProccesor(ABC):
         upload: Uploads the given file to gdrive. The file is deleted after the upload.
     """
 
-    abstractmethod
+    message: any
 
-    async def download(self, url: str, message) -> str:
+    def __init__(self, message):
+        self.message = message
+
+    @abstractmethod
+    async def download(self, url: str) -> str:
         """Downloads the file from the given url and stores it in a temporary location.
         Args:
             url: The url of the file to be downloaded.
@@ -21,27 +28,52 @@ class DocumentProccesor(ABC):
         """
         pass
 
-    async def upload(self, file_name: str, message) -> bool:
-        """Uploads the given file to gdrive. The file is deleted after the upload.
+    async def upload(self, file_name: str) -> bool:
+        """Uploads the given file to onedrive. The file is deleted after the upload.
         Args:
             file_path: The path of the file to be uploaded.
             folder_id: The id of the folder where the file will be uploaded.
         """
 
-        gauth = GoogleAuth()
+        # Upload path of the final file
+        file_upload_path = parse_kosp(file_name)
+        print(file_upload_path)
 
-        drive = GoogleDrive(gauth)
-        gauth.LoadCredentials()
+        # Use the context manager to manage a session instance
+        my_drive = OneDrive(CLIENT_ID, CLIENT_SECRET, TENANT,
+                            "http://localhost:8080", REFRESH_TOKEN)
 
-        file1 = drive.CreateFile({
-            'title': 'upload success.txt'
-        })  # Create GoogleDriveFile instance with title 'Hello.txt'.
-        file1.SetContentString(
-            'Hello World!')  # Set content of the file from given string.
-        file1.Upload()
+        # Get the details of all the items in the root directory
 
-        print("Upload one complete")
+        dir_to_travel: List[str] = file_upload_path.split("/")
 
-        file2 = drive.CreateFile({'title': 'boot.img'})
-        file2.SetContentFile(file_name)
-        file2.Upload()
+        items = my_drive.list_directory()
+
+        # Search through the root directory to find the file
+        parent_folder_id = None
+        dest_folder_id = None
+
+        for folder in dir_to_travel:
+            dest_folder_id = None
+            for item in items:
+                if "folder" in item and item.get("name") == folder:
+                    dest_folder_id = item["id"]
+                    break
+
+            if dest_folder_id is None:
+                dest_folder_id = my_drive.make_folder(folder, parent_folder_id)
+
+            items = my_drive.list_directory(dest_folder_id)
+            parent_folder_id = dest_folder_id
+
+        # Upload the file
+        new_file_id = await my_drive.upload_file(
+            file_path=file_name,
+            parent_folder_id=dest_folder_id,
+            verbose=False,
+            callback=self.__callback__)
+
+        print("Upload complete")
+
+    async def __callback__(self, progress: int, total: int):
+        print(progress / total)

@@ -3,5 +3,5 @@ Pyrogram
 asyncio
 datetime
 TgCrypto
-requests
-pydrive
+httpx
+git+https://github.com/npv12/graph-onedrive

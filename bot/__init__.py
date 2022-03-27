@@ -17,7 +17,13 @@ if ENV:
     # Pyrogram details
     API_ID = os.environ.get("API_ID", None)
     API_HASH = os.environ.get("API_HASH", None)
-    USERBOT_SESSION = os.environ.get("USERBOT_SESSION", None)
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", None)
+
+    # OneDrive details
+    CLIENT_ID = os.environ.get("CLIENT_ID", None)
+    CLIENT_SECRET = os.environ.get("CLIENT_SECRET", None)
+    TENANT = os.environ.get("TENANT", None)
+    REFRESH_TOKEN = os.environ.get("REFRESH_TOKEN", None)
 
 else:
     #Config File
@@ -29,5 +35,11 @@ else:
     API_ID = config.get(NAME, 'API_ID')
     API_HASH = config.get(NAME, "API_HASH")
     BOT_TOKEN = config.get(NAME, "BOT_TOKEN")
+
+    # OneDrive details
+    CLIENT_ID = config.get(NAME, "CLIENT_ID")
+    CLIENT_SECRET = config.get(NAME, "CLIENT_SECRET")
+    TENANT = config.get(NAME, "TENANT")
+    REFRESH_TOKEN = config.get(NAME, "REFRESH_TOKEN")
 
 print("Env set properly")
