@@ -29,7 +29,7 @@ class DocumentProccesor(ABC):
         """
         pass
 
-    async def upload(self, file_name: str) -> bool:
+    async def upload(self, file_name: str) -> str:
         """Uploads the given file to onedrive. The file is deleted after the upload.
         Args:
             file_path: The path of the file to be uploaded.
@@ -46,8 +46,7 @@ class DocumentProccesor(ABC):
                                 "http://localhost:8080", REFRESH_TOKEN)
 
         except:
-            print("Failed to login to OneDrive")
-            return False
+            raise Exception("Failed to login to OneDrive")
 
         # Get the details of all the items in the root directory
 
@@ -79,8 +78,7 @@ class DocumentProccesor(ABC):
                 verbose=False,
                 callback=self.__callback__)
         except:
-            print("Failed to upload file")
-            return False
+            raise Exception("Failed to upload file")
 
     async def __callback__(self, progress: int, total: int, content_size: int):
         print(progress / total)
@@ -92,3 +90,4 @@ class DocumentProccesor(ABC):
                                     "Uploading file...")
         except Exception as e:
             print(content)
+            raise Exception("Something went wrong")

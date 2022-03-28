@@ -43,7 +43,11 @@ async def mirror(client, message):
         handler: DocumentProccesor = DocumentProcessorFactory.create_document_processor(
             download_url, replied_message)
         file_name = await handler.download(download_url)
-        await handler.upload(file_name)
+        await replied_message.edit_text(
+            "Downloaded successfully. \nStarting upload now")
+        url: str = await handler.upload(file_name)
+        await replied_message.edit_text(
+            f"Successfully uploaded file. you can find it at {url}")
     except:
         await replied_message.edit_text(
             "Mirror failed.\nPlease check the link and try again")
