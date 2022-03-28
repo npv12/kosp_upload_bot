@@ -1,5 +1,6 @@
 from bot.document_processor.base import DocumentProccesor
 from bot.document_processor.direct_link import DirectLink
+from bot.document_processor.gdrive import GDrive
 
 
 class DocumentProcessorFactory:
@@ -14,4 +15,6 @@ class DocumentProcessorFactory:
         Returns
             object: The object of the concrete Document Processor class to be used
         """
+        if "drive.google.com":
+            return GDrive(message)
         return DirectLink(message)

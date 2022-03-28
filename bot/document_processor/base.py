@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from typing import List
 from graph_onedrive import OneDrive
-from bot import CLIENT_ID, CLIENT_SECRET, TENANT, REFRESH_TOKEN
+from bot import CLIENT_ID_ONEDRIVE, CLIENT_SECRET, TENANT, REFRESH_TOKEN
 
 from bot.utils.parser import parse_kosp
 from bot.utils.progress import progress_callback
@@ -42,7 +42,7 @@ class DocumentProccesor(ABC):
         try:
 
             # Use the context manager to manage a session instance
-            my_drive = OneDrive(CLIENT_ID, CLIENT_SECRET, TENANT,
+            my_drive = OneDrive(CLIENT_ID_ONEDRIVE, CLIENT_SECRET, TENANT,
                                 "http://localhost:8080", REFRESH_TOKEN)
 
         except:
