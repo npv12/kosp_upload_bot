@@ -2,6 +2,8 @@ import httpx
 from bot.document_processor.base import DocumentProccesor
 import os
 
+from bot.utils.progress import progress_callback
+
 
 class DirectLink(DocumentProccesor):
 
@@ -21,24 +23,19 @@ class DirectLink(DocumentProccesor):
 
                 with httpx.stream("GET", url) as response:
                     total = int(response.headers["Content-Length"])
-                    for chunk in response.iter_bytes():
+                    for chunk in response.iter_bytes(chunk_size=1024 * 1024 *
+                                                     3):
                         data += chunk
-                        await self.__update_download_status__(
-                            response.num_bytes_downloaded, total)
-                        print(response.num_bytes_downloaded / total) * 100
+                        print(response.num_bytes_downloaded / total * 100)
+                        await progress_callback(response.num_bytes_downloaded,
+                                                total, total, self.message,
+                                                "Downloading file...")
 
-            except:
+            except Exception as e:
                 await self.message.edit_text("Failed to download the file")
+                print(e)
             return local_filename
 
         except:
             await self.message.edit_text("Download failed")
         return None
-
-    def __update_download_status__(self, progress: int, total: int):
-        print(progress / total * 100)
-        content: str = f"Downloading file ${progress/total*100}"
-        try:
-            self.message.edit_text(content)
-        except:
-            print(content)
