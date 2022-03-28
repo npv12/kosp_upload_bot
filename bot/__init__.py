@@ -18,7 +18,7 @@ if ENV:
     API_ID = os.environ.get("API_ID", None)
     API_HASH = os.environ.get("API_HASH", None)
     BOT_TOKEN = os.environ.get("BOT_TOKEN", None)
-    INTERNALS_CHAT = os.environ.get("INTERNALS_CHAT", None)
+    INTERNALS_CHAT = int(os.environ.get("INTERNALS_CHAT", None))
 
     # OneDrive details
     CLIENT_ID_ONEDRIVE = os.environ.get("CLIENT_ID_ONEDRIVE", None)
@@ -46,7 +46,7 @@ else:
     API_ID = config.get(NAME, 'API_ID')
     API_HASH = config.get(NAME, "API_HASH")
     BOT_TOKEN = config.get(NAME, "BOT_TOKEN")
-    INTERNALS_CHAT = config.get(NAME, "INTERNALS_CHAT")
+    INTERNALS_CHAT = int(config.get(NAME, "INTERNALS_CHAT"))
 
     # OneDrive details
     CLIENT_ID_ONEDRIVE = config.get(NAME, "CLIENT_ID_ONEDRIVE")
