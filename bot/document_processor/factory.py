@@ -15,6 +15,6 @@ class DocumentProcessorFactory:
         Returns
             object: The object of the concrete Document Processor class to be used
         """
-        if "drive.google.com":
+        if "drive.google.com" in url:
             return GDrive(message)
         return DirectLink(message)
