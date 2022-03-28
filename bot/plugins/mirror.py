@@ -1,11 +1,12 @@
 from pyrogram import filters, Client
+from bot import INTERNALS_CHAT
 
 from bot.document_processor.base import DocumentProccesor
 from bot.document_processor.factory import DocumentProcessorFactory
 
 
 @Client.on_message(
-    filters.chat(-1001755612783)
+    filters.chat(INTERNALS_CHAT)
     & filters.command(commands=(["Mirror", "mirror"])))
 async def mirror(client, message):
 
