@@ -60,8 +60,8 @@ class GDrive(DocumentProccesor):
             while done is False:
                 status, done = downloader.next_chunk()
                 progress = status.progress() * content_size
-                progress_callback(progress, content_size, self.message,
-                                  "Starting Download ....")
+                await progress_callback(progress, content_size, self.message,
+                                        "Starting Download ....")
                 print("Download %d%%." % int(status.progress() * 100))
 
             return local_filename
