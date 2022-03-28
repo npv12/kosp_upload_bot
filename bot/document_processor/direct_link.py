@@ -28,12 +28,20 @@ class DirectLink(DocumentProccesor):
                         data += chunk
                         print(response.num_bytes_downloaded / total * 100)
                         await progress_callback(response.num_bytes_downloaded,
-                                                total, total, self.message,
+                                                total, self.message,
                                                 "Downloading file...")
 
             except Exception as e:
                 await self.message.edit_text("Failed to download the file")
                 print(e)
+
+            try:
+                with open(local_filename, "wb") as f:
+                    f.write(data)
+            except:
+                await self.message.edit_text("Failed to download the file")
+                return False
+
             return local_filename
 
         except:

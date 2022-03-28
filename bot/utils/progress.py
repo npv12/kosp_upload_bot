@@ -48,15 +48,13 @@ def calculate_speed(current: int, start_time: float):
 async def progress_callback(
     current: int,
     total: int,
-    content_size: int,
     message,
     text: str,
     upload: bool = False,
 ):
     """
-    current: int, defines the amount of progress completed. can be in bytes or be relative to total
-    total: int, defines the total amount of progress/parts to complete. can be in bytes or be relative value
-    content_size: int, defines the size of the content to be uploaded. should be used in case total isn't the total bytes uploaded
+    current: int, defines the amount of progress completed. can be in bytes
+    total: int, defines the total amount of progress/parts to complete. can be in bytes 
     """
 
     message_identifier = (message.chat.id, message.message_id)
@@ -70,13 +68,13 @@ async def progress_callback(
     elif (time.time() - last_edit_time) > 1:
         handle = 'Upload' if upload else 'Download'
         if last_edit_time:
-            speed = calculate_speed(current * content_size / total, start_time)
+            speed = calculate_speed(current, start_time)
         else:
             speed = '0 B'
         text = f'''{text}
 <code>{return_progress_string(current, total)}</code>
-<b>Total Size:</b> {format_bytes(content_size)}
-<b>{handle}ed Size:</b> {format_bytes(current / total * content_size)}
+<b>Total Size:</b> {format_bytes(total)}
+<b>{handle}ed Size:</b> {format_bytes(current)}
 <b>{handle} Speed:</b> {speed}/s
 <b>ETA:</b> {calculate_eta(current, total, start_time)}'''
         if prevtext != text:

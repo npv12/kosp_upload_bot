@@ -4,6 +4,7 @@ from graph_onedrive import OneDrive
 from bot import CLIENT_ID, CLIENT_SECRET, TENANT, REFRESH_TOKEN
 
 from bot.utils.parser import parse_kosp
+from bot.utils.progress import progress_callback
 
 
 class DocumentProccesor(ABC):
@@ -81,10 +82,13 @@ class DocumentProccesor(ABC):
             print("Failed to upload file")
             return False
 
-    async def __callback__(self, progress: int, total: int):
+    async def __callback__(self, progress: int, total: int, content_size: int):
         print(progress / total)
         content: str = "Uploading file... " + str(progress / total * 100) + "%"
+        progress = progress / total * content_size
+
         try:
-            await self.message.edit_text(content)
+            await progress_callback(progress, content_size, self.message,
+                                    "Uploading file...")
         except Exception as e:
             print(content)
