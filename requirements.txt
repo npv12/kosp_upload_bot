@@ -4,4 +4,6 @@ asyncio
 datetime
 TgCrypto
 httpx
+google-api-python-client
+google-api-core
 git+https://github.com/npv12/graph-onedrive
