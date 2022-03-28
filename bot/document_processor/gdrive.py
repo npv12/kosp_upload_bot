@@ -32,6 +32,7 @@ class GDrive(DocumentProccesor):
 
         temp_folder_path: str = "./DumpsterFire/"
         file_id = self.__parse_url__(url)
+        print(file_id)
 
         try:
 
@@ -42,7 +43,8 @@ class GDrive(DocumentProccesor):
             drive_file = drive.get(fileId=file_id,
                                    fields='name,size').execute()
             local_filename = temp_folder_path + drive_file['name']
-            content_size = drive_file['size']
+            content_size = int(drive_file['size'])
+            print(content_size)
 
             download_request = drive.get_media(fileId=file_id)
 
