@@ -1,7 +1,9 @@
 # Thanks to sukionotes for parts of this code
 
+import asyncio
 import time
 from datetime import timedelta
+from pyrogram.errors import FloodWait
 
 progress_callback_data = dict()
 
@@ -78,8 +80,14 @@ async def progress_callback(
 <b>{handle} Speed:</b> {speed}/s
 <b>ETA:</b> {calculate_eta(current, total, start_time)}'''
         if prevtext != text:
-            await message.edit_text(text)
-            prevtext = text
-            last_edit_time = time.time()
-            progress_callback_data[
-                message_identifier] = last_edit_time, prevtext, start_time
+            try:
+                await message.edit_text(text)
+                prevtext = text
+                last_edit_time = time.time()
+                progress_callback_data[
+                    message_identifier] = last_edit_time, prevtext, start_time
+            except FloodWait as e:
+                print(f"Floodwait: Sleeping for {e.x} seconds")
+                asyncio.sleep(e.x)
+            except Exception as e:
+                print(e)
