@@ -24,7 +24,7 @@ class DirectLink(DocumentProccesor):
                 with httpx.stream("GET", url) as response:
                     total = int(response.headers["Content-Length"])
                     for chunk in response.iter_bytes(chunk_size=1024 * 1024 *
-                                                     3):
+                                                     10):
                         data += chunk
                         print(response.num_bytes_downloaded / total * 100)
                         await progress_callback(response.num_bytes_downloaded,

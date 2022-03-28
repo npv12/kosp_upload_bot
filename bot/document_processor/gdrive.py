@@ -55,7 +55,7 @@ class GDrive(DocumentProccesor):
                                    'wb')  # this can be used to write to disk
             downloader = MediaIoBaseDownload(fd=local_file,
                                              request=download_request,
-                                             chunksize=1024 * 1024 * 3)
+                                             chunksize=1024 * 1024 * 10)
             done = False
             while done is False:
                 status, done = downloader.next_chunk()
