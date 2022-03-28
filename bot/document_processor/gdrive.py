@@ -33,39 +33,36 @@ class GDrive(DocumentProccesor):
         temp_folder_path: str = "./DumpsterFire/"
         file_id = self.__parse_url__(url)
 
-        credentials = service_account.Credentials.from_service_account_info(
-            creds)
-        drive_service = build('drive', 'v3', credentials=credentials)
-        drive = drive_service.files()
-        drive_file = drive.get(fileId=file_id, fields='name,size').execute()
-        local_filename = temp_folder_path + drive_file['name']
-        content_size = drive_file['size']
-
-        download_request = drive.get_media(fileId=file_id)
-
-        if not os.path.exists(temp_folder_path):
-            os.mkdir(temp_folder_path)
-
-        local_file = io.FileIO(local_filename,
-                               'wb')  # this can be used to write to disk
-        downloader = MediaIoBaseDownload(fd=local_file,
-                                         request=download_request,
-                                         chunksize=1024 * 1024 * 3)
-        done = False
-        print("Going to start download")
-        while done is False:
-            status, done = downloader.next_chunk()
-            progress = status.progress() * content_size
-            progress_callback(progress, content_size, self.message,
-                              "Starting Download ....")
-            print("Download %d%%." % int(status.progress() * 100))
-
-        print("Completed")
-        return local_filename
-
         try:
 
-            pass
+            credentials = service_account.Credentials.from_service_account_info(
+                creds)
+            drive_service = build('drive', 'v3', credentials=credentials)
+            drive = drive_service.files()
+            drive_file = drive.get(fileId=file_id,
+                                   fields='name,size').execute()
+            local_filename = temp_folder_path + drive_file['name']
+            content_size = drive_file['size']
+
+            download_request = drive.get_media(fileId=file_id)
+
+            if not os.path.exists(temp_folder_path):
+                os.mkdir(temp_folder_path)
+
+            local_file = io.FileIO(local_filename,
+                                   'wb')  # this can be used to write to disk
+            downloader = MediaIoBaseDownload(fd=local_file,
+                                             request=download_request,
+                                             chunksize=1024 * 1024 * 3)
+            done = False
+            while done is False:
+                status, done = downloader.next_chunk()
+                progress = status.progress() * content_size
+                progress_callback(progress, content_size, self.message,
+                                  "Starting Download ....")
+                print("Download %d%%." % int(status.progress() * 100))
+
+            return local_filename
 
         except Exception as e:
             print(e)
