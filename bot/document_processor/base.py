@@ -3,7 +3,7 @@ from typing import List
 from graph_onedrive import OneDrive
 from bot import CLIENT_ID, CLIENT_SECRET, TENANT, REFRESH_TOKEN
 
-from bot.parser import parse_kosp
+from bot.utils.parser import parse_kosp
 
 
 class DocumentProccesor(ABC):
