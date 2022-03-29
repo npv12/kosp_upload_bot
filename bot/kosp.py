@@ -1,6 +1,9 @@
 from configparser import ConfigParser
-from bot import API_ID, API_HASH, BOT_TOKEN
+
 from pyrogram import Client
+
+from bot import API_ID, API_HASH, BOT_TOKEN
+from bot.utils.logging import logger
 
 from . import __version__
 
@@ -29,8 +32,8 @@ class KOSP(Client):
 
     def start(self):
         super().start()
-        print(f"KOSP is running. Version is v{__version__}")
+        logger.info(f"KOSP is running. Version is v{__version__}")
 
     def stop(self):
         super().stop()
-        print("I am off to sleep now")
+        logger.info("I am off to sleep now")

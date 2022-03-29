@@ -3,7 +3,8 @@
 import asyncio
 import time
 from datetime import timedelta
-from pyrogram.errors import FloodWait
+from pyrogram.errors import FloodWait, MessageNotModified
+from bot.utils.logging import logger
 
 progress_callback_data = dict()
 
@@ -87,7 +88,7 @@ async def progress_callback(
                 progress_callback_data[
                     message_identifier] = last_edit_time, prevtext, start_time
             except FloodWait as e:
-                print(f"Floodwait: Sleeping for {e.x} seconds")
+                logger.error(f"Floodwait: Sleeping for {e.x} seconds")
                 asyncio.sleep(e.x)
-            except Exception as e:
-                print(e)
+            except (MessageNotModified): 
+                pass

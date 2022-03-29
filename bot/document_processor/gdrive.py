@@ -10,6 +10,7 @@ from bot.constants import TEMP_FOLDER_PATH
 from bot.document_processor.base import DocumentProccesor
 
 from bot.utils.progress import progress_callback
+from bot.utils.logging import logger
 
 creds = {
     "type": "service_account",
@@ -30,10 +31,15 @@ class GDrive(DocumentProccesor):
 
     async def download(self, url: str) -> str:
 
+        logger.info("Starting download from gdrive")
+
         file_id = self.__parse_url__(url)
+
+        logger.info(f"File i recieved from url is {file_id}")
 
         try:
 
+            logger.info("Trying to get access to gdrive details")
             credentials = service_account.Credentials.from_service_account_info(
                 creds)
             drive_service = build('drive', 'v3', credentials=credentials)
@@ -41,8 +47,9 @@ class GDrive(DocumentProccesor):
             drive_file = drive.get(fileId=file_id,
                                    fields='name,size').execute()
             local_filename = drive_file['name']
+            logger.info(f"The file name to be downloaded is {local_filename}")
             content_size = int(drive_file['size'])
-            print(content_size)
+            logger.info(f"File size is {content_size}")
 
             download_request = drive.get_media(fileId=file_id)
 
@@ -55,17 +62,18 @@ class GDrive(DocumentProccesor):
                                              request=download_request,
                                              chunksize=1024 * 1024 * 10)
             done = False
+            logger.info("Starting downloading")
             while done is False:
                 status, done = downloader.next_chunk()
                 progress = status.progress() * content_size
                 await progress_callback(progress, content_size, self.message,
                                         "Starting Download ....")
-                print("Download %d%%." % int(status.progress() * 100))
+                logger.debug("Download %d%%." % int(status.progress() * 100))
 
             return local_filename
 
         except Exception as e:
-            print(e)
+            logger.exception(e)
             await self.message.edit_text("Download failed")
         return None
 

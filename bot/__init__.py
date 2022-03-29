@@ -1,13 +1,14 @@
 from configparser import ConfigParser, RawConfigParser
 import os
 from sys import version_info
-import os
+
+from bot.utils.logging import logger
 
 __version__ = "1.1"
 NAME = 'KOSP'
 
 if version_info[:2] < (3, 6):
-    print("KOSP needs version 3.6 or more")
+    logger.critical("KOSP needs version 3.6 or more")
     quit()
 
 print("Setting up ENV")
@@ -62,4 +63,4 @@ else:
     CLIENT_ID_GDRIVE = config.get(NAME, "CLIENT_ID_GDRIVE")
     CLIENT_X509_CERT_URL = raw_config.get(NAME, "CLIENT_X509_CERT_URL")
 
-print("Env set properly")
+logger.debug("Env set properly")
