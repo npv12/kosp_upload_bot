@@ -76,6 +76,8 @@ class DocumentProccesor(ABC):
             new_file_id = await my_drive.upload_file(
                 file_path=TEMP_FOLDER_PATH + file_name,
                 parent_folder_id=dest_folder_id,
+                if_exists="replace",
+                chunk_size=1024 * 1024 * 40,
                 verbose=False,
                 callback=self.__callback__)
 
