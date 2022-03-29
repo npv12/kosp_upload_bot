@@ -89,6 +89,6 @@ async def progress_callback(
                     message_identifier] = last_edit_time, prevtext, start_time
             except FloodWait as e:
                 logger.error(f"Floodwait: Sleeping for {e.x} seconds")
-                asyncio.sleep(e.x)
+                await asyncio.sleep(e.x)
             except (MessageNotModified): 
                 pass
