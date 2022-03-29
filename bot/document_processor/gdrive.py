@@ -1,4 +1,3 @@
-import httpx
 import io
 import os
 
@@ -7,6 +6,7 @@ from googleapiclient.http import MediaIoBaseDownload
 from google.oauth2 import service_account
 
 from bot import CLIENT_EMAIL, CLIENT_ID_GDRIVE, CLIENT_X509_CERT_URL, PRIVATE_KEY_GDRIVE, PRIVATE_KEY_ID, PROJECT_ID_GDRIVE
+from bot.constants import TEMP_FOLDER_PATH
 from bot.document_processor.base import DocumentProccesor
 
 from bot.utils.progress import progress_callback
@@ -30,9 +30,7 @@ class GDrive(DocumentProccesor):
 
     async def download(self, url: str) -> str:
 
-        temp_folder_path: str = "./DumpsterFire/"
         file_id = self.__parse_url__(url)
-        print(file_id)
 
         try:
 
@@ -42,16 +40,16 @@ class GDrive(DocumentProccesor):
             drive = drive_service.files()
             drive_file = drive.get(fileId=file_id,
                                    fields='name,size').execute()
-            local_filename = temp_folder_path + drive_file['name']
+            local_filename = drive_file['name']
             content_size = int(drive_file['size'])
             print(content_size)
 
             download_request = drive.get_media(fileId=file_id)
 
-            if not os.path.exists(temp_folder_path):
-                os.mkdir(temp_folder_path)
+            if not os.path.exists(TEMP_FOLDER_PATH):
+                os.mkdir(TEMP_FOLDER_PATH)
 
-            local_file = io.FileIO(local_filename,
+            local_file = io.FileIO(TEMP_FOLDER_PATH + local_filename,
                                    'wb')  # this can be used to write to disk
             downloader = MediaIoBaseDownload(fd=local_file,
                                              request=download_request,

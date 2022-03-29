@@ -1,4 +1,5 @@
 import httpx
+from bot.constants import TEMP_FOLDER_PATH
 from bot.document_processor.base import DocumentProccesor
 import os
 
@@ -9,14 +10,12 @@ class DirectLink(DocumentProccesor):
 
     async def download(self, url: str) -> str:
 
-        temp_folder_path: str = "./DumpsterFire/"
-
         try:
 
-            if not os.path.exists(temp_folder_path):
-                os.mkdir(temp_folder_path)
+            if not os.path.exists(TEMP_FOLDER_PATH):
+                os.mkdir(TEMP_FOLDER_PATH)
 
-            local_filename: str = temp_folder_path + url.split('/')[-1]
+            local_filename: str = url.split('/')[-1]
             data = b''
 
             try:
@@ -36,7 +35,7 @@ class DirectLink(DocumentProccesor):
                 print(e)
 
             try:
-                with open(local_filename, "wb") as f:
+                with open(TEMP_FOLDER_PATH + local_filename, "wb") as f:
                     f.write(data)
             except:
                 await self.message.edit_text("Failed to download the file")

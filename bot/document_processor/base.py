@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 from graph_onedrive import OneDrive
 from bot import CLIENT_ID_ONEDRIVE, CLIENT_SECRET, TENANT, REFRESH_TOKEN
+from bot.constants import BASE_URL, TEMP_FOLDER_PATH
 
 from bot.utils.parser import parse_kosp
 from bot.utils.progress import progress_callback
@@ -73,10 +74,13 @@ class DocumentProccesor(ABC):
 
             # Upload the file
             new_file_id = await my_drive.upload_file(
-                file_path=file_name,
+                file_path=TEMP_FOLDER_PATH + file_name,
                 parent_folder_id=dest_folder_id,
                 verbose=False,
                 callback=self.__callback__)
+
+            url: str = BASE_URL + "/" + file_upload_path + "/" + file_name
+            return url
         except:
             raise Exception("Failed to upload file")
 
