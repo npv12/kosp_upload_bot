@@ -10,4 +10,5 @@ async def add_admin(client, message):
         await message.reply_text("Reply to a user to add them as a admin")
         return
     await message.reply_text("Adding a admin")
-    maintainer_details.add_admin(message.reply_to_message.from_user.id)
+    maintainer_details.add_admin(message.from_user.id,
+                                 message.reply_to_message.from_user.id)
