@@ -7,7 +7,9 @@ from google.oauth2 import service_account
 
 from bot import CLIENT_EMAIL, CLIENT_ID_GDRIVE, CLIENT_X509_CERT_URL, PRIVATE_KEY_GDRIVE, PRIVATE_KEY_ID, PROJECT_ID_GDRIVE
 from bot.constants import TEMP_FOLDER_PATH
+from bot.database.maintainer_details import maintainer_details
 from bot.document_processor.base import DocumentProccesor
+from bot.utils.parser import find_device
 
 from bot.utils.progress import progress_callback
 from bot.utils.logging import logger
@@ -29,7 +31,7 @@ creds = {
 
 class GDrive(DocumentProccesor):
 
-    async def download(self, url: str) -> str:
+    async def download(self, user_id: int, url: str) -> str:
 
         logger.info("Starting download from gdrive")
 
@@ -47,6 +49,15 @@ class GDrive(DocumentProccesor):
             drive_file = drive.get(fileId=file_id,
                                    fields='name,size').execute()
             local_filename = drive_file['name']
+
+            device: str = find_device(local_filename)
+            print(device)
+            if device not in maintainer_details.get_devices(
+                    user_id=user_id
+            ) and not maintainer_details.is_admin(user_id):
+                logger.info("This user is not a maintainer of this device")
+                raise Exception("INVALID_DEVICE")
+
             logger.info(f"The file name to be downloaded is {local_filename}")
             content_size = int(drive_file['size'])
             logger.info(f"File size is {content_size}")

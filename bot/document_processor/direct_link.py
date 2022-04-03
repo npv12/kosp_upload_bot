@@ -2,20 +2,33 @@ import httpx
 from bot.constants import TEMP_FOLDER_PATH
 from bot.document_processor.base import DocumentProccesor
 import os
+from bot.utils.parser import find_device
 
 from bot.utils.progress import progress_callback
 from bot.utils.logging import logger
+from bot.database.maintainer_details import maintainer_details
 
 
 class DirectLink(DocumentProccesor):
 
-    async def download(self, url: str) -> str:
+    async def download(self, user_id: int, url: str) -> str:
 
         if not os.path.exists(TEMP_FOLDER_PATH):
             os.mkdir(TEMP_FOLDER_PATH)
 
         logger.info("Downloading file from direct link")
         local_filename: str = url.split('/')[-1]
+        device: str = find_device(local_filename)
+
+        try:
+            if device not in maintainer_details.get_devices(
+                    user_id=user_id
+            ) and not maintainer_details.is_admin(user_id):
+                logger.info("This user is not a maintainer of this device")
+                raise Exception("INVALID_DEVICE")
+        except:
+            pass
+
         data = b''
 
         try:

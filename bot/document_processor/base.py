@@ -4,7 +4,7 @@ from graph_onedrive import OneDrive
 from bot import CLIENT_ID_ONEDRIVE, CLIENT_SECRET, TENANT, REFRESH_TOKEN
 from bot.constants import BASE_URL, TEMP_FOLDER_PATH
 
-from bot.utils.parser import parse_kosp
+from bot.utils.parser import find_device, parse_kosp
 from bot.utils.progress import progress_callback
 
 
@@ -22,7 +22,7 @@ class DocumentProccesor(ABC):
         self.message = message
 
     @abstractmethod
-    async def download(self, url: str) -> str:
+    async def download(self, user_id: int, url: str) -> str:
         """Downloads the file from the given url and stores it in a temporary location.
         Args:
             url: The url of the file to be downloaded.
@@ -38,7 +38,7 @@ class DocumentProccesor(ABC):
         """
 
         # Upload path of the final file
-        file_upload_path = "Release builds/" + parse_kosp(file_name)
+        file_upload_path = "Release builds/A12/" + find_device(file_name)
 
         try:
 

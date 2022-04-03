@@ -1,6 +1,5 @@
 import shutil
 from pyrogram import filters, Client
-from bot import INTERNALS_CHAT
 import bot
 from bot.constants import TEMP_FOLDER_PATH
 
@@ -9,9 +8,7 @@ from bot.document_processor.factory import DocumentProcessorFactory
 from bot.utils.logging import logger
 
 
-@Client.on_message(
-    filters.chat(INTERNALS_CHAT)
-    & filters.command(commands=(["Mirror", "mirror"])))
+@Client.on_message(filters.command(commands=(["Mirror", "mirror"])))
 async def mirror(client: bot, message):
 
     logger.info("God asked me to mirror something")
@@ -29,10 +26,13 @@ async def mirror(client: bot, message):
     try:
         handler: DocumentProccesor = DocumentProcessorFactory.create_document_processor(
             download_url, replied_message)
-        file_name = await handler.download(download_url)
+
+        file_name = await handler.download(message.from_user.id, download_url)
         logger.info(f"Downloaded file at {file_name}")
+
         await replied_message.edit_text(
             "Downloaded successfully. \nStarting upload now")
+
         url: str = await handler.upload(file_name)
         logger.info(f"Uploaded file at {url}")
         shutil.rmtree(TEMP_FOLDER_PATH)
