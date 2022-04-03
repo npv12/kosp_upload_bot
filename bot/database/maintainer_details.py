@@ -156,5 +156,22 @@ class MaintainerDetails:
             logger.info("Something went wrong with the db")
             return
 
+    def add_support_group(self, requester_id: int, user_id: int,
+                          support_group: str) -> bool:
+        logger.info(
+            f"Adding support group for user {user_id} since {requester_id} requested it"
+        )
+
+        if not self.is_admin(requester_id):
+            logger.info(f"User {requester_id} is not an admin")
+            return False
+
+        logger.info("Adding support group")
+        self.maintainer_db.update_one(
+            {"user_id": user_id}, {"$set": {
+                "support_group": support_group
+            }})
+        return True
+
 
 maintainer_details = MaintainerDetails()
