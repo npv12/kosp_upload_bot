@@ -54,7 +54,7 @@ banner_photos = [
         'https://kosp.e11z.net/d/banners/Yellow%20Theme/KOSP%20banner.png',
         "support":
         'https://kosp.e11z.net/d/banners/Yellow%20Theme/Support%20us.png'
-    },  # Green
+    },  # Yellow
 ]
 
 
@@ -79,7 +79,6 @@ async def create_post(client, message):
             for i in range(1, len(parsed_links[link_type])):
                 download_link_str += f"[Mirror {i}]({parsed_links[link_type][i]}) "
 
-    date = datetime.today().strftime('%Y-%m-%d')
     device = find_device(message.command[1])
 
     maintainers: List[dict] = maintainer_details.get_maintainers(device)
@@ -97,11 +96,11 @@ async def create_post(client, message):
     Maintainers: {maintainer_str}
 
     Device: {device}
-    Date: {date}
+    Date: {datetime.today().strftime('%d-%m-%y')}
 
     {download_link_str}
 
-    [Changelog](https://raw.githubusercontent.com/AOSP-Krypton/ota/A12/{device}/changelog_{date})
+    [Changelog](https://raw.githubusercontent.com/AOSP-Krypton/ota/A12/{device}/changelog_{datetime.today().strftime('%Y_%m_%d')})
 
     Support group
     
