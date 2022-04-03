@@ -1,3 +1,4 @@
+from typing import List
 from bot.database import init
 from bot.utils.logging import logger
 
@@ -107,7 +108,7 @@ class MaintainerDetails:
             return True
 
     # Get devicrs
-    def get_devices(self, user_id: int) -> list:
+    def get_devices(self, user_id: int) -> List[dict]:
         logger.info(f"Getting devices for user {user_id}")
         get_user = self.maintainer_db.find_one({"user_id": user_id})
 
@@ -115,9 +116,30 @@ class MaintainerDetails:
         if get_user is None:
             logger.info(f"user {user_id} not found in maintainer database")
             return False
-        else:
-            logger.info(f"user {user_id} is a maintainer")
-            return get_user["device"]
+        return get_user["device"]
+
+    def get_maintainers(self, device: str):
+        logger.info(f"Getting maintainers for device {device}")
+
+        try:
+            get_device = self.maintainer_db.find({"device": device})
+            if get_device is None:
+                logger.info("This device isn't officially maintainer")
+                return False
+
+            maintainers: List[dict] = []
+
+            for maintainer in get_device:
+                logger.info(
+                    f"{maintainer['name']} is a maintainer for {device}")
+                maintainers.append({
+                    "name": maintainer["name"],
+                    "user_id": maintainer["user_id"]
+                })
+            return maintainers
+        except:
+            logger.info("Something went wrong with the db")
+            return
 
 
 maintainer_details = MaintainerDetails()
