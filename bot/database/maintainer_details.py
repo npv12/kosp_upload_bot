@@ -141,5 +141,20 @@ class MaintainerDetails:
             logger.info("Something went wrong with the db")
             return
 
+    def get_device_support_group(self, device: str) -> str:
+        logger.info(f"Getting support group for device {device}")
+        try:
+            get_device = self.maintainer_db.find_one({"device": device})
+
+            #User is new to the database
+            if get_device is None:
+                logger.info(
+                    f"device {device} not found in maintainer database")
+                return False
+            return get_device["support_group"]
+        except:
+            logger.info("Something went wrong with the db")
+            return
+
 
 maintainer_details = MaintainerDetails()

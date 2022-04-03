@@ -56,8 +56,10 @@ async def create_post(client, message):
 
     Support group
     *   [Official](https://t.me/kryptonaosp)
-    *   [Device]({device_support_group})
     """
+
+    if device_support_group:
+        caption += f"\n*   [Device]({device_support_group})"
 
     await client.send_photo(chat_id=message.chat.id,
                             photo=banner_photos[0],
