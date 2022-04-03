@@ -30,6 +30,12 @@ async def mirror(client: bot, message):
         file_name = await handler.download(message.from_user.id, download_url)
         logger.info(f"Downloaded file at {file_name}")
 
+        if file_name is None:
+            logger.info("File didn't download")
+            await replied_message.edit_text(
+                "Download failed because you are not a maintainer")
+            return
+
         await replied_message.edit_text(
             "Downloaded successfully. \nStarting upload now")
 
