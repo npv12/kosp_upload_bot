@@ -6,7 +6,8 @@ from bot.utils.logging import logger
 
 
 @Client.on_message(
-    filters.command(
+    ~filters.sticker & ~filters.via_bot & ~filters.edited & ~filters.forwarded
+    & filters.command(
         commands=(["Download", "download", "Downloads", "downloads"])))
 async def download(client, message):
 

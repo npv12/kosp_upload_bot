@@ -58,7 +58,9 @@ banner_photos = [
 ]
 
 
-@Client.on_message(filters.command(commands=(["release"])))
+@Client.on_message(~filters.sticker & ~filters.via_bot & ~filters.edited
+                   & ~filters.forwarded
+                   & filters.command(commands=(["release"])))
 async def create_post(client, message):
     logger.info("Someone called for me?")
     if len(message.command) < 2:

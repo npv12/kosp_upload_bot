@@ -3,7 +3,9 @@ from bot.utils.logging import logger
 from bot.database.maintainer_details import maintainer_details
 
 
-@Client.on_message(filters.command(commands=(["addAdmin"])))
+@Client.on_message(~filters.sticker & ~filters.via_bot & ~filters.edited
+                   & ~filters.forwarded
+                   & filters.command(commands=(["addAdmin"])))
 async def add_admin(client, message):
     logger.info("Lets add a new admin")
     if not message.reply_to_message:

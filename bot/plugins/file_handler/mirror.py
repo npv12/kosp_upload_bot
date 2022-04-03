@@ -8,7 +8,9 @@ from bot.document_processor.factory import DocumentProcessorFactory
 from bot.utils.logging import logger
 
 
-@Client.on_message(filters.command(commands=(["Mirror", "mirror"])))
+@Client.on_message(~filters.sticker & ~filters.via_bot & ~filters.edited
+                   & ~filters.forwarded
+                   & filters.command(commands=(["Mirror", "mirror"])))
 async def mirror(client: bot, message):
 
     logger.info("God asked me to mirror something")
