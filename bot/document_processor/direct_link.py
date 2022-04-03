@@ -1,12 +1,13 @@
-import httpx
-from bot.constants import TEMP_FOLDER_PATH
-from bot.document_processor.base import DocumentProccesor
+import math
 import os
-from bot.utils.parser import find_device
+import aiohttp
 
+from bot.constants import TEMP_FOLDER_PATH
+from bot.database.maintainer_details import maintainer_details
+from bot.document_processor.base import DocumentProccesor
+from bot.utils.parser import find_device
 from bot.utils.progress import progress_callback
 from bot.utils.logging import logger
-from bot.database.maintainer_details import maintainer_details
 
 
 class DirectLink(DocumentProccesor):
@@ -17,7 +18,11 @@ class DirectLink(DocumentProccesor):
             os.mkdir(TEMP_FOLDER_PATH)
 
         logger.info("Downloading file from direct link")
-        local_filename: str = url.split('/')[-1]
+        local_filename: str = ""
+        for part in url.split('/'):
+            if "KOSP" in part and "OFFICIAL" in part:
+                local_filename = part
+                break
         device: str = find_device(local_filename)
 
         try:
@@ -27,7 +32,7 @@ class DirectLink(DocumentProccesor):
             if device not in official_devices and not maintainer_details.is_admin(
                     user_id):
                 logger.info("This user is not a maintainer of this device")
-                raise Exception("INVALID_DEVICE")
+                return
         except:
             pass
 
@@ -35,16 +40,28 @@ class DirectLink(DocumentProccesor):
 
         try:
 
-            with httpx.stream("GET", url) as response:
-                total = int(response.headers["Content-Length"])
-                logger.info(f"The recieved file size is {total}")
-                for chunk in response.iter_bytes(chunk_size=1024 * 1024 * 10):
-                    data += chunk
-                    logger.debug(response.num_bytes_downloaded / total * 100)
-                    await progress_callback(response.num_bytes_downloaded,
-                                            total, self.message,
-                                            "Downloading file...")
-                logger.info("Successfully downloaded the file")
+            session = aiohttp.ClientSession()
+            response = await session.get(url)
+            total = int(response.headers["Content-Length"])
+            logger.info(f"The recieved file size is {total}")
+            progress = 0
+            last_update_value = -1
+            while True:
+                chunk = await response.content.read(1024 * 10)
+                if not chunk:
+                    break
+                progress += len(chunk)
+
+                if math.floor(progress / total * 100) % 1 == 0 and math.floor(
+                        progress / total * 100) != last_update_value:
+                    await progress_callback(progress,
+                                            total,
+                                            message=self.message,
+                                            text="Starting Download ... ")
+                    last_update_value = math.floor(progress / total * 100)
+
+            logger.info("Successfully downloaded the file")
+            await session.close
 
         except Exception as e:
             logger.exception(e)
@@ -57,6 +74,6 @@ class DirectLink(DocumentProccesor):
                 f.write(data)
         except:
             await self.message.edit_text("Failed to download the file")
-            return False
+            return None
 
         return local_filename
