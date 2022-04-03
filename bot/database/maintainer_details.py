@@ -25,7 +25,8 @@ class MaintainerDetails:
             return False
 
     #Add a maintainer
-    def add_maintainer(self, requested_id: int, user_id: int, device: str):
+    def add_maintainer(self, requested_id: int, user_id: int, name: str,
+                       device: str):
         logger.info(
             f"Adding user {user_id} to maintainer database since {requested_id} requested it"
         )
@@ -49,9 +50,11 @@ class MaintainerDetails:
         else:
             self.maintainer_db.insert_one({
                 "user_id": user_id,
+                "name": name,
                 "is_maintainer": True,
                 "is_admin": False,
                 "device": [device],
+                "support_group": ""
             })
             logger.info("Added the user to a maintainer")
             return True
