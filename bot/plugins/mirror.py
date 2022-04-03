@@ -42,7 +42,7 @@ async def mirror(client: bot, message):
         url: str = await handler.upload(message.from_user.id, file_name)
         logger.info(f"Uploaded file at {url}")
         shutil.rmtree(TEMP_FOLDER_PATH)
-        replied_message.delete()
+        await replied_message.delete()
         await message.reply_text(
             f"Successfully uploaded file. you can find it at {url}")
 
