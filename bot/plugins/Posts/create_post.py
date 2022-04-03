@@ -114,6 +114,7 @@ async def create_post(client, message):
     *   [Device]({device_support_group})"""
 
     random_int = random.randint(0, 5)
+    random_follow = random.randint(0, 1)
     logger.info(f"Downloading banner {random_int}")
     try:
 
@@ -126,6 +127,12 @@ async def create_post(client, message):
                                 photo=banner_photos[random_int]["banner"],
                                 parse_mode="md",
                                 caption=caption)
+        if random_follow == 1:
+            await client.send_photo(chat_id=CHANNEL_ID,
+                                    photo=banner_photos[random_int]["follow"])
+        else:
+            await client.send_photo(chat_id=CHANNEL_ID,
+                                    photo=banner_photos[random_int]["support"])
     except:
         await message.reply_text("Something went wrong")
         return
