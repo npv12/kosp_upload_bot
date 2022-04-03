@@ -26,11 +26,10 @@ async def create_post(client, message):
     for link_type in possible_links:
 
         if len(parsed_links[link_type]) > 0:
-            download_link_str += f"*    [{link_type.capitalize()}]({parsed_links[link_type][0]}) "
+            download_link_str += f"""
+    *    [{link_type.capitalize()}]({parsed_links[link_type][0]}) """
             for i in range(1, len(parsed_links[link_type])):
                 download_link_str += f"[Mirror {i}]({parsed_links[link_type][i]}) "
-
-            download_link_str += "\n"
 
     date = datetime.today().strftime('%Y-%m-%d')
     device = find_device(message.command[1])
@@ -38,13 +37,13 @@ async def create_post(client, message):
     maintainers: List[dict] = maintainer_details.get_maintainers(device)
     maintainer_str: str = ""
     for maintainer in maintainers:
-        maintainer_str += f"[{maintainer['name']}] (tg://user?id={maintainer['user_id']}) "
+        maintainer_str += f"[{maintainer['name']}](tg://user?id={maintainer['user_id']}) "
 
     device_support_group = maintainer_details.get_device_support_group(device)
 
     caption = f"""
     KOSP 12.1 | OFFICIAL
-    
+
     Maintainers: {maintainer_str}
 
     Device: {device}
@@ -55,11 +54,12 @@ async def create_post(client, message):
     [Changelog](https://raw.githubusercontent.com/AOSP-Krypton/ota/A12/{device}/changelog_{date})
 
     Support group
-    *   [Official](https://t.me/kryptonaosp)
-    """
+    
+    *   [Official](https://t.me/kryptonaosp)"""
 
     if device_support_group:
-        caption += f"\n*   [Device]({device_support_group})"
+        caption += f"""
+    *   [Device]({device_support_group})"""
 
     await client.send_photo(chat_id=message.chat.id,
                             photo=banner_photos[0],
