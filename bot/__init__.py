@@ -4,14 +4,14 @@ from sys import version_info
 
 from bot.utils.logging import logger
 
-__version__ = "1.1"
+__version__ = "2.0"
 NAME = 'KOSP'
 
 if version_info[:2] < (3, 6):
     logger.critical("KOSP needs version 3.6 or more")
     quit()
 
-print("Setting up ENV")
+logger.info("Setting up ENV")
 ENV = bool(os.environ.get('ENV', False))
 
 if ENV:
