@@ -1,4 +1,5 @@
 from datetime import datetime
+import random
 from typing import List
 from pyrogram import filters, Client
 from bot.database.maintainer_details import maintainer_details
@@ -6,7 +7,54 @@ from bot.utils.logging import logger
 from bot.utils.parser import find_device, parse_post_links
 
 banner_photos = [
-    'AgACAgUAAxkBAANMYkmRZxtdejAhIg0nYHbXUy7jd8gAAtWuMRuIsUlW1XO8VP_oLZcACAEAAwIAA20ABx4E'  # red
+    {
+        "follow":
+        'AgACAgUAAx0CaKSGbwAD0WJJsa0MSm8ETVFaEQkISbvjZfbpAAIlsDEbGwdRVhCZYB2xUXiaAAgBAAMCAAN4AAceBA',
+        "banner":
+        'AgACAgUAAx0CaKSGbwAD0mJJsi0-sDCjn4A7I-YVtlrjNMeAAAImsDEbGwdRVoGTZQjs0v6AAAgBAAMCAAN5AAceBA',
+        "support":
+        'AgACAgUAAx0CaKSGbwAD02JJsj6StsL-l6g8TKOzENsnfC16AAInsDEbGwdRVszCOtHSyIQjAAgBAAMCAAN4AAceBA'
+    },  # blue
+    {
+        "follow":
+        'AgACAgUAAx0CaKSGbwAD1GJJsm0lIVGfP3_AcPspDp5cO1rSAAIosDEbGwdRViH-GHZCuAV2AAgBAAMCAAN4AAceBA',
+        "banner":
+        'AgACAgUAAx0CaKSGbwAD1WJJsnL5d72HDtdL04mJQl2qw1iRAAIpsDEbGwdRVubBSVPuTU8mAAgBAAMCAAN5AAceBA',
+        "support":
+        'AgACAgUAAx0CaKSGbwAD1mJJsnaABcgU0aVefOdNHPaPkzcxAAIqsDEbGwdRVnA670y1qan-AAgBAAMCAAN4AAceBA'
+    },  # Green
+    {
+        "follow":
+        'AgACAgUAAx0CaKSGbwAD12JJsp9JvE0AAXSK1dpMU9VqZBTfwAACK7AxGxsHUVaTe7_Y1hnw5gAIAQADAgADeAAHHgQ',
+        "banner":
+        'AgACAgUAAx0CaKSGbwAD2GJJsqRQYJjmnBaBqLyvQha_IZkIAALVrjEbiLFJVtVzvFT_6C2XAAgBAAMCAAN5AAceBA',
+        "support":
+        'AgACAgUAAx0CaKSGbwAD2WJJsqtc3dM17ldgrCzOUJs0Gg8HAAIssDEbGwdRVmWTlGmDE4HmAAgBAAMCAAN4AAceBA'
+    },  # Red,
+    {
+        "follow":
+        'AgACAgUAAx0CaKSGbwAD2mJJstVkvsCiuJysDpBm9BhN5jgFAAItsDEbGwdRVjC39bTSNXNmAAgBAAMCAAN4AAceBA',
+        "banner":
+        'AgACAgUAAx0CaKSGbwAD22JJstncg_XgyMPYigQHiIp0664pAAIusDEbGwdRVjE-QyNuRsytAAgBAAMCAAN5AAceBA',
+        "support":
+        'AgACAgUAAx0CaKSGbwAD3GJJst00e4PN7W7T8KxYPZPXA2pyAAIvsDEbGwdRVoS_DFS9iBAEAAgBAAMCAAN4AAceBA'
+    },  #Rose
+    {
+        "follow":
+        'AgACAgUAAx0CaKSGbwAD3WJJswPqS7rdE2tvzdbDy0s27Kz2AAIwsDEbGwdRVtjg6O4c5zshAAgBAAMCAAN4AAceBA',
+        "banner":
+        'AgACAgUAAx0CaKSGbwAD3mJJswg_NsBcEfuQjgE5GjQZw837AAIxsDEbGwdRVpT5a-04BM4aAAgBAAMCAAN5AAceBA',
+        "support":
+        'AgACAgUAAx0CaKSGbwAD32JJswsw6Csn954jDzj4smh0dZd9AAIysDEbGwdRVu4V1_Dk6EwQAAgBAAMCAAN4AAceBA'
+    },  # Violet
+    {
+        "follow":
+        'AgACAgUAAx0CaKSGbwAD4GJJsw5F0-5O_H63fL0g0kn4i_a-AAIzsDEbGwdRVvqmBSxNp84-AAgBAAMCAAN4AAceBA',
+        "banner":
+        'AgACAgUAAx0CaKSGbwAD4WJJsxHrjtIDFBCOaCf0-fhUhprvAAI0sDEbGwdRVtYKZQGtoq-VAAgBAAMCAAN5AAceBA',
+        "support":
+        'AgACAgUAAx0CaKSGbwAD4mJJsxRpLQjx381KMZgNAuWfPO-hAAI1sDEbGwdRVsJJ6im9aCNOAAgBAAMCAAN4AAceBA'
+    },  # Green
 ]
 
 
@@ -62,6 +110,7 @@ async def create_post(client, message):
     *   [Device]({device_support_group})"""
 
     await client.send_photo(chat_id=message.chat.id,
-                            photo=banner_photos[0],
+                            photo=banner_photos[random.randint(0,
+                                                               5)]["banner"],
                             parse_mode="md",
                             caption=caption)
