@@ -7,3 +7,4 @@ httpx
 google-api-python-client
 google-api-core
 git+https://github.com/npv12/graph-onedrive@dcb5f08ed9619b40c23a42c9cca3769ffadfd0a5
+pymongo
