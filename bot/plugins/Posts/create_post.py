@@ -9,51 +9,51 @@ from bot.utils.parser import find_device, parse_post_links
 banner_photos = [
     {
         "follow":
-        'AgACAgUAAx0CaKSGbwAD0WJJsa0MSm8ETVFaEQkISbvjZfbpAAIlsDEbGwdRVhCZYB2xUXiaAAgBAAMCAAN4AAceBA',
+        'https://kosp.e11z.net/d/banners/Blue%20Theme/Follow%20us.png',
         "banner":
-        'AgACAgUAAx0CaKSGbwAD0mJJsi0-sDCjn4A7I-YVtlrjNMeAAAImsDEbGwdRVoGTZQjs0v6AAAgBAAMCAAN5AAceBA',
+        'https://kosp.e11z.net/d/banners/Blue%20Theme/KOSP%20banner.png',
         "support":
-        'AgACAgUAAx0CaKSGbwAD02JJsj6StsL-l6g8TKOzENsnfC16AAInsDEbGwdRVszCOtHSyIQjAAgBAAMCAAN4AAceBA'
+        'https://kosp.e11z.net/d/banners/Blue%20Theme/Support%20us.png'
     },  # blue
     {
         "follow":
-        'AgACAgUAAx0CaKSGbwAD1GJJsm0lIVGfP3_AcPspDp5cO1rSAAIosDEbGwdRViH-GHZCuAV2AAgBAAMCAAN4AAceBA',
+        'https://kosp.e11z.net/d/banners/Green%20Theme/Follow%20us.png',
         "banner":
-        'AgACAgUAAx0CaKSGbwAD1WJJsnL5d72HDtdL04mJQl2qw1iRAAIpsDEbGwdRVubBSVPuTU8mAAgBAAMCAAN5AAceBA',
+        'https://kosp.e11z.net/d/banners/Green%20Theme/KOSP%20banner.png',
         "support":
-        'AgACAgUAAx0CaKSGbwAD1mJJsnaABcgU0aVefOdNHPaPkzcxAAIqsDEbGwdRVnA670y1qan-AAgBAAMCAAN4AAceBA'
+        'https://kosp.e11z.net/d/banners/Green%20Theme/Support%20us.png'
     },  # Green
     {
         "follow":
-        'AgACAgUAAx0CaKSGbwAD12JJsp9JvE0AAXSK1dpMU9VqZBTfwAACK7AxGxsHUVaTe7_Y1hnw5gAIAQADAgADeAAHHgQ',
+        'https://kosp.e11z.net/d/banners/Red%20Theme/Follow%20us.png',
         "banner":
-        'AgACAgUAAx0CaKSGbwAD2GJJsqRQYJjmnBaBqLyvQha_IZkIAALVrjEbiLFJVtVzvFT_6C2XAAgBAAMCAAN5AAceBA',
+        'https://kosp.e11z.net/d/banners/Red%20Theme/KOSP%20banner.png',
         "support":
-        'AgACAgUAAx0CaKSGbwAD2WJJsqtc3dM17ldgrCzOUJs0Gg8HAAIssDEbGwdRVmWTlGmDE4HmAAgBAAMCAAN4AAceBA'
+        'https://kosp.e11z.net/d/banners/Red%20Theme/Support%20us.png'
     },  # Red,
     {
         "follow":
-        'AgACAgUAAx0CaKSGbwAD2mJJstVkvsCiuJysDpBm9BhN5jgFAAItsDEbGwdRVjC39bTSNXNmAAgBAAMCAAN4AAceBA',
+        'https://kosp.e11z.net/d/banners/Rose%20Theme/Follow%20us.png',
         "banner":
-        'AgACAgUAAx0CaKSGbwAD22JJstncg_XgyMPYigQHiIp0664pAAIusDEbGwdRVjE-QyNuRsytAAgBAAMCAAN5AAceBA',
+        'https://kosp.e11z.net/d/banners/Rose%20Theme/KOSP%20banner.png',
         "support":
-        'AgACAgUAAx0CaKSGbwAD3GJJst00e4PN7W7T8KxYPZPXA2pyAAIvsDEbGwdRVoS_DFS9iBAEAAgBAAMCAAN4AAceBA'
+        'https://kosp.e11z.net/d/banners/Rose%20Theme/Support%20us.png'
     },  #Rose
     {
         "follow":
-        'AgACAgUAAx0CaKSGbwAD3WJJswPqS7rdE2tvzdbDy0s27Kz2AAIwsDEbGwdRVtjg6O4c5zshAAgBAAMCAAN4AAceBA',
+        'https://kosp.e11z.net/d/banners/Violet%20Theme/Follow%20us.png',
         "banner":
-        'AgACAgUAAx0CaKSGbwAD3mJJswg_NsBcEfuQjgE5GjQZw837AAIxsDEbGwdRVpT5a-04BM4aAAgBAAMCAAN5AAceBA',
+        'https://kosp.e11z.net/d/banners/Violet%20Theme/KOSP%20banner.png',
         "support":
-        'AgACAgUAAx0CaKSGbwAD32JJswsw6Csn954jDzj4smh0dZd9AAIysDEbGwdRVu4V1_Dk6EwQAAgBAAMCAAN4AAceBA'
+        'https://kosp.e11z.net/d/banners/Violet%20Theme/Support%20us.png'
     },  # Violet
     {
         "follow":
-        'AgACAgUAAx0CaKSGbwAD4GJJsw5F0-5O_H63fL0g0kn4i_a-AAIzsDEbGwdRVvqmBSxNp84-AAgBAAMCAAN4AAceBA',
+        'https://kosp.e11z.net/d/banners/Yellow%20Theme/Follow%20us.png',
         "banner":
-        'AgACAgUAAx0CaKSGbwAD4WJJsxHrjtIDFBCOaCf0-fhUhprvAAI0sDEbGwdRVtYKZQGtoq-VAAgBAAMCAAN5AAceBA',
+        'https://kosp.e11z.net/d/banners/Yellow%20Theme/KOSP%20banner.png',
         "support":
-        'AgACAgUAAx0CaKSGbwAD4mJJsxRpLQjx381KMZgNAuWfPO-hAAI1sDEbGwdRVsJJ6im9aCNOAAgBAAMCAAN4AAceBA'
+        'https://kosp.e11z.net/d/banners/Yellow%20Theme/Support%20us.png'
     },  # Green
 ]
 
@@ -109,8 +109,13 @@ async def create_post(client, message):
         caption += f"""
     *   [Device]({device_support_group})"""
 
-    await client.send_photo(chat_id=message.chat.id,
-                            photo=banner_photos[random.randint(0,
-                                                               5)]["banner"],
-                            parse_mode="md",
-                            caption=caption)
+    try:
+
+        await client.send_photo(chat_id=message.chat.id,
+                                photo=banner_photos[random.randint(
+                                    0, 5)]["banner"],
+                                parse_mode="md",
+                                caption=caption)
+    except:
+        await message.reply_text("Something went wrong")
+        return
