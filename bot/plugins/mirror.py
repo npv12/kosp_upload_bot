@@ -1,6 +1,8 @@
+import shutil
 from pyrogram import filters, Client
 from bot import INTERNALS_CHAT
 import bot
+from bot.constants import TEMP_FOLDER_PATH
 
 from bot.document_processor.base import DocumentProccesor
 from bot.document_processor.factory import DocumentProcessorFactory
@@ -33,6 +35,7 @@ async def mirror(client: bot, message):
             "Downloaded successfully. \nStarting upload now")
         url: str = await handler.upload(file_name)
         logger.info(f"Uploaded file at {url}")
+        shutil.rmtree(TEMP_FOLDER_PATH)
         await replied_message.edit_text(
             f"Successfully uploaded file. you can find it at {url}")
 
