@@ -2,6 +2,7 @@ from datetime import datetime
 import random
 from typing import List
 from pyrogram import filters, Client
+from bot import CHANNEL_ID
 from bot.database.maintainer_details import maintainer_details
 from bot.utils.logging import logger
 from bot.utils.parser import find_device, find_kosp_ver, parse_post_links
@@ -117,6 +118,11 @@ async def create_post(client, message):
     try:
 
         await client.send_photo(chat_id=message.chat.id,
+                                photo=banner_photos[random_int]["banner"],
+                                parse_mode="md",
+                                caption=caption)
+
+        await client.send_photo(chat_id=CHANNEL_ID,
                                 photo=banner_photos[random_int]["banner"],
                                 parse_mode="md",
                                 caption=caption)

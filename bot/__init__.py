@@ -19,6 +19,7 @@ if ENV:
     API_ID = os.environ.get("API_ID", None)
     API_HASH = os.environ.get("API_HASH", None)
     BOT_TOKEN = os.environ.get("BOT_TOKEN", None)
+    CHANNEL_ID = os.environ.get("CHANNEL_ID", None)
 
     # OneDrive details
     CLIENT_ID_ONEDRIVE = os.environ.get("CLIENT_ID_ONEDRIVE", None)
@@ -50,6 +51,7 @@ else:
     API_ID = config.get(NAME, 'API_ID')
     API_HASH = config.get(NAME, "API_HASH")
     BOT_TOKEN = config.get(NAME, "BOT_TOKEN")
+    CHANNEL_ID = config.get(NAME, "CHANNEL_ID")
 
     # OneDrive details
     CLIENT_ID_ONEDRIVE = config.get(NAME, "CLIENT_ID_ONEDRIVE")
