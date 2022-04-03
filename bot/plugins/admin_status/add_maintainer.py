@@ -20,7 +20,7 @@ async def add_maintainer(client, message):
         name = message.reply_to_message.from_user.first_name
         device = message.command[1]
 
-    elif len(message.command) == 4:
+    elif len(message.command) == 3:
         maintainer_id = int(message.command[1])
         device = message.command[3]
         name = message.command[2]
@@ -30,7 +30,7 @@ async def add_maintainer(client, message):
         return
 
     replied_message = await message.reply_text("Adding a maintainer")
-    maintainer_details.add_maintainer(requester_id, name, maintainer_id,
+    maintainer_details.add_maintainer(requester_id, maintainer_id, name,
                                       device)
     await replied_message.edit_text(
         "Successfully add the user as an maintainer")
