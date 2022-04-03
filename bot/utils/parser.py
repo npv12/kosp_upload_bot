@@ -44,3 +44,11 @@ def parse_post_links(links: List[str]) -> dict:
 
     logger.info(f"The links were parsed as {parsed_links}")
     return parsed_links
+
+def find_kosp_ver(url: str) -> str:
+    logger.info(f"Recieved request to find a KOSP version for {url}")
+
+    if "boot_" in url:
+        return None
+
+    return url.split("/")[-1].split("-")[1]

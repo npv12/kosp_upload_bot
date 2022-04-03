@@ -4,7 +4,7 @@ from typing import List
 from pyrogram import filters, Client
 from bot.database.maintainer_details import maintainer_details
 from bot.utils.logging import logger
-from bot.utils.parser import find_device, parse_post_links
+from bot.utils.parser import find_device, find_kosp_ver, parse_post_links
 
 banner_photos = [
     {
@@ -89,8 +89,10 @@ async def create_post(client, message):
 
     device_support_group = maintainer_details.get_device_support_group(device)
 
+    kosp_version = find_kosp_ver(message.command[1])
+
     caption = f"""
-    KOSP 12.1 | OFFICIAL
+    KOSP {kosp_version} | Android 12.1 | OFFICIAL
 
     Maintainers: {maintainer_str}
 
