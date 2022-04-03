@@ -9,7 +9,7 @@ class MaintainerDetails:
         self.maintainer_db = init()["maintainer"]
 
     #Check if user is a maintainer or not
-    def is_maintainer(self, user_id):
+    def is_maintainer(self, user_id) -> bool:
         logger.info(f"Checking if user {user_id} is a maintainer")
         get_user = self.maintainer_db.find_one({"user_id": user_id})
 
@@ -26,7 +26,7 @@ class MaintainerDetails:
 
     #Add a maintainer
     def add_maintainer(self, requested_id: int, user_id: int, name: str,
-                       device: str):
+                       device: str) -> bool:
         logger.info(
             f"Adding user {user_id} to maintainer database since {requested_id} requested it"
         )
@@ -60,7 +60,7 @@ class MaintainerDetails:
             return True
 
     #Remove a maintainer
-    def remove_maintainer(self, user_id):
+    def remove_maintainer(self, user_id) -> bool:
         logger.info(f"Removing user {user_id} from maintainer database")
         if not self.is_maintainer(user_id):
             logger.info(f"User {user_id} is not a maintainer")
@@ -70,7 +70,7 @@ class MaintainerDetails:
             return True
 
     # is an admin
-    def is_admin(self, user_id: int):
+    def is_admin(self, user_id: int) -> bool:
         logger.info(f"Checking if user {user_id} is an admin")
         get_user = self.maintainer_db.find_one({"user_id": user_id})
 
@@ -86,7 +86,7 @@ class MaintainerDetails:
             return False
 
     # Add an admin
-    def add_admin(self, requester_id: int, user_id: int):
+    def add_admin(self, requester_id: int, user_id: int) -> bool:
         logger.info(
             f"Adding user {user_id} to admin database since {requester_id} requested it"
         )
@@ -107,7 +107,7 @@ class MaintainerDetails:
             return True
 
     # Get devicrs
-    def get_devices(self, user_id):
+    def get_devices(self, user_id: int) -> list:
         logger.info(f"Getting devices for user {user_id}")
         get_user = self.maintainer_db.find_one({"user_id": user_id})
 
