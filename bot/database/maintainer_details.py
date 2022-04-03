@@ -25,18 +25,35 @@ class MaintainerDetails:
             return False
 
     #Add a maintainer
-    def add_maintainer(self, user_id: int, device: str):
-        logger.info(f"Adding user {user_id} to maintainer database")
+    def add_maintainer(self, requested_id: int, user_id: int, device: str):
+        logger.info(
+            f"Adding user {user_id} to maintainer database since {requested_id} requested it"
+        )
+
+        if not self.is_admin(requested_id):
+            logger.info(f"User {requested_id} is not an admin")
+            return False
+
         if self.is_maintainer(user_id):
             logger.info(f"User {user_id} is already a maintainer")
-            return False
+            if device in self.get_devices(user_id):
+                logger.info(f"User {user_id} already has {device}")
+                return False
+            else:
+                logger.info(f"Adding {device} to user {user_id}")
+                self.maintainer_db.update_one({"user_id": user_id},
+                                              {"$push": {
+                                                  "device": device
+                                              }})
+                return True
         else:
-            self.pm_permit_db.insert_one({
+            self.maintainer_db.insert_one({
                 "user_id": user_id,
-                "is_maintainer": False,
+                "is_maintainer": True,
                 "is_admin": False,
-                "device": device,
+                "device": [device],
             })
+            logger.info("Added the user to a maintainer")
             return True
 
     #Remove a maintainer
@@ -50,7 +67,7 @@ class MaintainerDetails:
             return True
 
     # is an admin
-    def is_admin(self, user_id):
+    def is_admin(self, user_id: int):
         logger.info(f"Checking if user {user_id} is an admin")
         get_user = self.maintainer_db.find_one({"user_id": user_id})
 
@@ -66,17 +83,38 @@ class MaintainerDetails:
             return False
 
     # Add an admin
-    def add_admin(self, user_id):
-        logger.info(f"Adding user {user_id} to admin database")
+    def add_admin(self, requester_id: int, user_id: int):
+        logger.info(
+            f"Adding user {user_id} to admin database since {requester_id} requested it"
+        )
+
+        if not self.is_admin(requester_id):
+            logger.info(f"User {requester_id} is not an admin")
+            return False
+
         if self.is_admin(user_id):
             logger.info(f"User {user_id} is already an admin")
             return False
         else:
+            logger.info("Promoting the user to admin status")
             self.maintainer_db.update_one({"user_id": user_id},
                                           {"$set": {
                                               "is_admin": True
                                           }})
             return True
+
+    # Get devicrs
+    def get_devices(self, user_id):
+        logger.info(f"Getting devices for user {user_id}")
+        get_user = self.maintainer_db.find_one({"user_id": user_id})
+
+        #User is new to the database
+        if get_user is None:
+            logger.info(f"user {user_id} not found in maintainer database")
+            return False
+        else:
+            logger.info(f"user {user_id} is a maintainer")
+            return get_user["device"]
 
 
 maintainer_details = MaintainerDetails()
