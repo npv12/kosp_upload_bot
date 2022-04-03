@@ -35,6 +35,10 @@ if ENV:
     CLIENT_ID_GDRIVE = os.environ.get("CLIENT_ID_GDRIVE", None)
     CLIENT_X509_CERT_URL = os.environ.get("CLIENT_X509_CERT_URL", None)
 
+    # Mongo DB
+    MONGO_URL = os.environ.get("MONGO_URL", None)
+    DB_NAME = os.environ.get("DB_NAME", None)
+
 else:
     #Config File
     config_file = "config.ini"
@@ -62,5 +66,9 @@ else:
     CLIENT_EMAIL = config.get(NAME, "CLIENT_EMAIL")
     CLIENT_ID_GDRIVE = config.get(NAME, "CLIENT_ID_GDRIVE")
     CLIENT_X509_CERT_URL = raw_config.get(NAME, "CLIENT_X509_CERT_URL")
+
+    # Mongo DB
+    MONGO_URL = config.get(NAME, "MONGO_URL")
+    DB_NAME = config.get(NAME, "DB_NAME")
 
 logger.debug("Env set properly")

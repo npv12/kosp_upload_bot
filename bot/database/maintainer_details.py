@@ -77,3 +77,6 @@ class MaintainerDetails:
                                               "is_admin": True
                                           }})
             return True
+
+
+maintainer_details = MaintainerDetails()
