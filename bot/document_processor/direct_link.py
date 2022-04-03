@@ -51,6 +51,7 @@ class DirectLink(DocumentProccesor):
                 if not chunk:
                     break
                 progress += len(chunk)
+                data += chunk
 
                 if math.floor(progress / total * 100) % 1 == 0 and math.floor(
                         progress / total * 100) != last_update_value:
