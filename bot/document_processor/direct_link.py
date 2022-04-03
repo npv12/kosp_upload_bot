@@ -61,7 +61,7 @@ class DirectLink(DocumentProccesor):
                     last_update_value = math.floor(progress / total * 100)
 
             logger.info("Successfully downloaded the file")
-            await session.close
+            session.close
 
         except Exception as e:
             logger.exception(e)
