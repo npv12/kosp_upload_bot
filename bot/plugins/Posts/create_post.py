@@ -9,51 +9,51 @@ from bot.utils.parser import find_device, find_kosp_ver, parse_post_links
 banner_photos = [
     {
         "follow":
-        'https://kosp.e11z.net/d/banners/Blue%20Theme/Follow%20us.png',
+        'https://sourceforge.net/projects/kosp/files/banners/Blue-Theme/Follow%20us.png/download',
         "banner":
-        'https://kosp.e11z.net/d/banners/Blue%20Theme/KOSP%20banner.png',
+        'https://sourceforge.net/projects/kosp/files/banners/Blue-Theme/KOSP%20banner.png/download',
         "support":
-        'https://kosp.e11z.net/d/banners/Blue%20Theme/Support%20us.png'
+        'https://sourceforge.net/projects/kosp/files/banners/Blue-Theme/Support%20us.png/download'
     },  # blue
     {
         "follow":
-        'https://kosp.e11z.net/d/banners/Green%20Theme/Follow%20us.png',
+        'https://sourceforge.net/projects/kosp/files/banners/Green-Theme/Follow%20us.png/download',
         "banner":
-        'https://kosp.e11z.net/d/banners/Green%20Theme/KOSP%20banner.png',
+        'https://sourceforge.net/projects/kosp/files/banners/Green-Theme/KOSP%20banner.png/download',
         "support":
-        'https://kosp.e11z.net/d/banners/Green%20Theme/Support%20us.png'
+        'https://sourceforge.net/projects/kosp/files/banners/Green-Theme/Support%20us.png/download'
     },  # Green
     {
         "follow":
-        'https://kosp.e11z.net/d/banners/Red%20Theme/Follow%20us.png',
+        'https://sourceforge.net/projects/kosp/files/banners/Red-Theme/Follow%20us.png/download',
         "banner":
-        'https://kosp.e11z.net/d/banners/Red%20Theme/KOSP%20banner.png',
+        'https://sourceforge.net/projects/kosp/files/banners/Red-Theme/KOSP%20banner.png/download',
         "support":
-        'https://kosp.e11z.net/d/banners/Red%20Theme/Support%20us.png'
+        'https://sourceforge.net/projects/kosp/files/banners/Red-Theme/Support%20us.png/download'
     },  # Red,
     {
         "follow":
-        'https://kosp.e11z.net/d/banners/Rose%20Theme/Follow%20us.png',
+        'https://sourceforge.net/projects/kosp/files/banners/Rose-Theme/Follow%20us.png/download',
         "banner":
-        'https://kosp.e11z.net/d/banners/Rose%20Theme/KOSP%20banner.png',
+        'https://sourceforge.net/projects/kosp/files/banners/Rose-Theme/KOSP%20banner.png/download',
         "support":
-        'https://kosp.e11z.net/d/banners/Rose%20Theme/Support%20us.png'
+        'https://sourceforge.net/projects/kosp/files/banners/Rose-Theme/Support%20us.png/download'
     },  #Rose
     {
         "follow":
-        'https://kosp.e11z.net/d/banners/Violet%20Theme/Follow%20us.png',
+        'https://sourceforge.net/projects/kosp/files/banners/Violet-Theme/Follow%20us.png/download',
         "banner":
-        'https://kosp.e11z.net/d/banners/Violet%20Theme/KOSP%20banner.png',
+        'https://sourceforge.net/projects/kosp/files/banners/Violet-Theme/KOSP%20banner.png/download',
         "support":
-        'https://kosp.e11z.net/d/banners/Violet%20Theme/Support%20us.png'
+        'https://sourceforge.net/projects/kosp/files/banners/Violet-Theme/Support%20us.png/download'
     },  # Violet
     {
         "follow":
-        'https://kosp.e11z.net/d/banners/Yellow%20Theme/Follow%20us.png',
+        'https://sourceforge.net/projects/kosp/files/banners/Yellow-Theme/Follow%20us.png/download',
         "banner":
-        'https://kosp.e11z.net/d/banners/Yellow%20Theme/KOSP%20banner.png',
+        'https://sourceforge.net/projects/kosp/files/banners/Yellow-Theme/KOSP%20banner.png/download',
         "support":
-        'https://kosp.e11z.net/d/banners/Yellow%20Theme/Support%20us.png'
+        'https://sourceforge.net/projects/kosp/files/banners/Yellow-Theme/Support%20us.png/download'
     },  # Yellow
 ]
 
@@ -112,11 +112,12 @@ async def create_post(client, message):
         caption += f"""
     *   [Device]({device_support_group})"""
 
+    random_int = random.randint(0, 5)
+    logger.info(f"Downloading banner {random_int}")
     try:
 
         await client.send_photo(chat_id=message.chat.id,
-                                photo=banner_photos[random.randint(
-                                    0, 5)]["banner"],
+                                photo=banner_photos[random_int]["banner"],
                                 parse_mode="md",
                                 caption=caption)
     except:
