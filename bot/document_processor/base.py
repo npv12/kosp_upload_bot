@@ -38,7 +38,7 @@ class DocumentProccesor(ABC):
         """
 
         # Upload path of the final file
-        file_upload_path = parse_kosp(file_name)
+        file_upload_path = "Release builds/" + parse_kosp(file_name)
 
         try:
 
