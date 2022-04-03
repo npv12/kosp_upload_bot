@@ -68,6 +68,11 @@ async def create_post(client, message):
         await message.reply_text("Feed me the links senpai")
         return
 
+    if not maintainer_details.is_maintainer(message.from_user.id):
+        await message.reply_text(
+            "You are not a maintainer, you can't create a post")
+        return
+
     parsed_links: dict = parse_post_links(message.command[1:])
 
     download_link_str: str = "Download:\n"
