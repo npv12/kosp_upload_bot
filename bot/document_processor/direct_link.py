@@ -21,9 +21,11 @@ class DirectLink(DocumentProccesor):
         device: str = find_device(local_filename)
 
         try:
-            if device not in maintainer_details.get_devices(
-                    user_id=user_id
-            ) and not maintainer_details.is_admin(user_id):
+            official_devices = maintainer_details.get_devices(user_id)
+            if not official_devices:
+                official_devices = []
+            if device not in official_devices and not maintainer_details.is_admin(
+                    user_id):
                 logger.info("This user is not a maintainer of this device")
                 raise Exception("INVALID_DEVICE")
         except:

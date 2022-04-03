@@ -28,7 +28,8 @@ async def download(client, message):
         handler: DocumentProccesor = DocumentProcessorFactory.create_document_processor(
             download_url, replied_message)
 
-        file_name: str = await handler.download(download_url)
+        file_name: str = await handler.download(message.from_user.id,
+                                                download_url)
         logger.info(f"Downloaded file at {file_name}")
         await replied_message.edit_text("Downloaded file at " + file_name)
 

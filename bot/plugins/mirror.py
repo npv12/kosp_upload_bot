@@ -33,7 +33,7 @@ async def mirror(client: bot, message):
         await replied_message.edit_text(
             "Downloaded successfully. \nStarting upload now")
 
-        url: str = await handler.upload(file_name)
+        url: str = await handler.upload(message.from_user.id, file_name)
         logger.info(f"Uploaded file at {url}")
         shutil.rmtree(TEMP_FOLDER_PATH)
         await replied_message.edit_text(

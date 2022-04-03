@@ -3,9 +3,11 @@ from typing import List
 from graph_onedrive import OneDrive
 from bot import CLIENT_ID_ONEDRIVE, CLIENT_SECRET, TENANT, REFRESH_TOKEN
 from bot.constants import BASE_URL, TEMP_FOLDER_PATH
+from bot.database import maintainer_details
 
-from bot.utils.parser import find_device, parse_kosp
+from bot.utils.parser import find_device
 from bot.utils.progress import progress_callback
+from bot.utils.logging import logger
 
 
 class DocumentProccesor(ABC):
@@ -30,7 +32,7 @@ class DocumentProccesor(ABC):
         """
         pass
 
-    async def upload(self, file_name: str) -> str:
+    async def upload(self, user_id: int, file_name: str) -> str:
         """Uploads the given file to onedrive. The file is deleted after the upload.
         Args:
             file_path: The path of the file to be uploaded.
@@ -38,7 +40,8 @@ class DocumentProccesor(ABC):
         """
 
         # Upload path of the final file
-        file_upload_path = "Release builds/A12/" + find_device(file_name)
+        device = find_device(file_name)
+        file_upload_path = "Release builds/A12/" + device
 
         try:
 
@@ -55,6 +58,17 @@ class DocumentProccesor(ABC):
         # Search through the root directory to find the file
         parent_folder_id = None
         dest_folder_id = None
+
+        try:
+            official_devices = maintainer_details.get_devices(user_id)
+            if not official_devices:
+                official_devices = []
+            if device not in official_devices and not maintainer_details.is_admin(
+                    user_id):
+                logger.info("This user is not a maintainer of this device")
+                raise Exception("INVALID_DEVICE")
+        except:
+            pass
 
         try:
             items = my_drive.list_directory()
@@ -89,6 +103,7 @@ class DocumentProccesor(ABC):
 
     async def __callback__(self, progress: int, total: int, content_size: int):
         content: str = "Uploading file... " + str(progress / total * 100) + "%"
+        logger.info(content)
         progress = progress / total * content_size
 
         try:
