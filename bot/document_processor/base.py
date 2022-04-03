@@ -88,7 +88,6 @@ class DocumentProccesor(ABC):
             raise Exception("Failed to upload file")
 
     async def __callback__(self, progress: int, total: int, content_size: int):
-        print(progress / total)
         content: str = "Uploading file... " + str(progress / total * 100) + "%"
         progress = progress / total * content_size
 
@@ -96,5 +95,4 @@ class DocumentProccesor(ABC):
             await progress_callback(progress, content_size, self.message,
                                     "Uploading file...")
         except Exception as e:
-            print(content)
             raise Exception("Something went wrong")
