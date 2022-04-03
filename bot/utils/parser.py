@@ -31,11 +31,15 @@ def parse_post_links(links: List[str]) -> dict:
 
     for link in links:
         logger.info(f"Analysing {link}")
+        link_split_number = -1
 
+        if "sourceforge.net" in link:
+            link_split_number = -2
+            
         if BASE_URL in link or "sourceforge.net" in link:
             if "boot_" in link:
                 parsed_links["boot"].append(link)
-            elif link.split("/")[-1].endswith("-img.zip"):
+            elif link.split("/")[link_split_number].endswith("-img.zip"):
                 parsed_links["fastboot"].append(link)
             elif "incremental" in link:
                 parsed_links["incremental"].append(link)
