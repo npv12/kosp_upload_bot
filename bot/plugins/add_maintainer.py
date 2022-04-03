@@ -29,3 +29,4 @@ async def add_maintainer(client, message):
 
     await message.reply_text("Adding a maintainer")
     maintainer_details.add_maintainer(requester_id, maintainer_id, device)
+    await message.reply_text("Successfully add the user as an maintainer")
