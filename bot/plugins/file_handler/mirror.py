@@ -1,4 +1,5 @@
 import shutil
+from typing import List
 from pyrogram import filters, Client
 import bot
 from bot.constants import TEMP_FOLDER_PATH
@@ -21,32 +22,40 @@ async def mirror(client: bot, message):
             "No download link was provided.\nPlease provide one")
         return
 
-    download_url: str = message.command[1]
-    logger.info("Found download url as {download_url}")
+    download_urls: List[str] = message.command[1:]
+    logger.info(f"Found download url as {download_urls}")
     replied_message = await message.reply_text("Starting the download for you")
+    mirrored_url: List[str] = []
 
     try:
-        handler: DocumentProccesor = DocumentProcessorFactory.create_document_processor(
-            download_url, replied_message)
 
-        file_name = await handler.download(message.from_user.id, download_url)
-        logger.info(f"Downloaded file at {file_name}")
+        for download_url in download_urls:
+            handler: DocumentProccesor = DocumentProcessorFactory.create_document_processor(
+                download_url, replied_message)
 
-        if file_name is None:
-            logger.info("File didn't download")
+            file_name = await handler.download(message.from_user.id,
+                                               download_url)
+            logger.info(f"Downloaded file at {file_name}")
+
+            if file_name is None:
+                logger.info("File didn't download")
+                await replied_message.edit_text(
+                    "Download failed because you are not a maintainer")
+                return
+
             await replied_message.edit_text(
-                "Download failed because you are not a maintainer")
-            return
+                "Downloaded successfully. \nStarting upload now")
 
-        await replied_message.edit_text(
-            "Downloaded successfully. \nStarting upload now")
+            url: str = await handler.upload(message.from_user.id, file_name)
+            logger.info(f"Uploaded file at {url}")
+            mirrored_url.append(url)
 
-        url: str = await handler.upload(message.from_user.id, file_name)
-        logger.info(f"Uploaded file at {url}")
         shutil.rmtree(TEMP_FOLDER_PATH)
         await replied_message.delete()
-        await message.reply_text(
-            f"Successfully uploaded file. you can find it at {url}")
+        reply_text = f"Successfully uploaded file. you can find it at "
+        for url in mirrored_url:
+            reply_text += f"\n{url}"
+        await message.reply_text(reply_text)
 
     except Exception as e:
         logger.exception(e)
