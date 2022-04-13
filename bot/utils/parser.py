@@ -37,7 +37,7 @@ def parse_post_links(links: List[str]) -> dict:
             link_split_number = -2
             
         if BASE_URL in link or "sourceforge.net" in link:
-            if "boot_" in link:
+            if "boot.img" in link:
                 parsed_links["boot"].append(link)
             elif link.split("/")[link_split_number].endswith("-img.zip"):
                 parsed_links["fastboot"].append(link)
