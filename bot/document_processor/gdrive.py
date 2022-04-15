@@ -91,5 +91,6 @@ class GDrive(DocumentProccesor):
 
     def __parse_url__(self, url: str) -> str:
         url = url.replace("https://drive.google.com/file/d/", "")
-        url = url.replace("/view?usp=sharing", "")
-        return url
+        file_id = url.split("/")[0]
+        logger.info(f"Parsed url is {file_id}")
+        return file_id
