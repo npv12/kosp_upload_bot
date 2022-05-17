@@ -90,7 +90,14 @@ class GDrive(DocumentProccesor):
         return None
 
     def __parse_url__(self, url: str) -> str:
-        url = url.replace("https://drive.google.com/file/d/", "")
-        file_id = url.split("/")[0]
+        url = url.replace("https://drive.google.com/", "")
+        file_id: str = ""
+        if "file/d/" in url:
+            url = url.replace("file/d/","")
+            file_id = url.split("/")[0]
+        elif "uc?id" in url:
+            url = url.replace("uc?id=", "")
+            file_id = url.replace("&export=download", "")
+       
         logger.info(f"Parsed url is {file_id}")
         return file_id
