@@ -95,7 +95,7 @@ class DocumentProccesor(ABC):
                 callback=self.__callback__)
 
             url: str = BASE_URL + file_upload_path.replace(
-                "Release builds/", "") + "/" + file_name
+                "flamingo/", "") + "/" + file_name
             return url
         except:
             raise Exception("Failed to upload file")

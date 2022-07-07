@@ -1,2 +1,2 @@
-BASE_URL = "https://kosp.e11z.net/d/"
+BASE_URL = "http://flamingo.e11z.net"
 TEMP_FOLDER_PATH: str = "./DumpsterFire/"
