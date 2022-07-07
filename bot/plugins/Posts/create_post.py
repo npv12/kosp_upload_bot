@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 import random
 from typing import List
@@ -58,10 +59,10 @@ async def create_post(client, message):
 
     device_support_group = maintainer_details.get_device_support_group(device)
 
-    kosp_version = find_kosp_ver(message.command[1])
+    flamingo_version = find_kosp_ver(message.command[1])
 
     caption = f"""
-    KOSP {kosp_version} | Android 12.1 | OFFICIAL
+    Flamingo OS {flamingo_version} | Android 12.1 | OFFICIAL
 
     Maintainers: {maintainer_str}
 
@@ -70,36 +71,43 @@ async def create_post(client, message):
 
     {download_link_str}
 
-    [Changelog](https://raw.githubusercontent.com/AOSP-Krypton/ota/A12/{device}/changelog_{datetime.today().strftime('%Y_%m_%d')})
+    [Changelog](https://raw.githubusercontent.com/FlamingoOS-devices/ota/A12.1/{device}/changelog_{datetime.today().strftime('%Y_%m_%d')})
 
     Support group
     
-    *   [Official](https://t.me/kryptonaosp)"""
+    *   [Official](https://t.me/flamingo_common)"""
 
     if device_support_group:
         caption += f"""
     *   [Device]({device_support_group})"""
 
-    random_int = random.randint(0, 5)
-    random_follow = random.randint(0, 1)
-    logger.info(f"Downloading banner {random_int}")
+    # We don't have any banners yet
+    # random_int = random.randint(0, 5)
+    # random_follow = random.randint(0, 1)
+    # logger.info(f"Downloading banner {random_int}")
     try:
 
-        await client.send_photo(chat_id=message.chat.id,
-                                photo=banner_photos[random_int]["banner"],
-                                parse_mode="md",
-                                caption=caption)
+        # await client.send_photo(chat_id=message.chat.id,
+        #                         photo=banner_photos[random_int]["banner"],
+        #                         parse_mode="md",
+        #                         caption=caption)
 
-        await client.send_photo(chat_id=CHANNEL_ID,
-                                photo=banner_photos[random_int]["banner"],
-                                parse_mode="md",
-                                caption=caption)
-        if random_follow == 1:
-            await client.send_photo(chat_id=CHANNEL_ID,
-                                    photo=banner_photos[random_int]["follow"])
-        else:
-            await client.send_photo(chat_id=CHANNEL_ID,
-                                    photo=banner_photos[random_int]["support"])
+        # await client.send_photo(chat_id=CHANNEL_ID,
+        #                         photo=banner_photos[random_int]["banner"],
+        #                         parse_mode="md",
+        #                         caption=caption)
+        # if random_follow == 1:
+        #     await client.send_photo(chat_id=CHANNEL_ID,
+        #                             photo=banner_photos[random_int]["follow"])
+        # else:
+        #     await client.send_photo(chat_id=CHANNEL_ID,
+        #                             photo=banner_photos[random_int]["support"])
+
+        asyncio.gather(
+            # await client.send_message(chat_id=CHANNEL_ID, text=caption),
+            await client.send_message(chat_id=message.chat.id, text=caption),
+        )
+    
     except:
         await message.reply_text("Something went wrong")
         return
