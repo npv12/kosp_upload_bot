@@ -5,10 +5,10 @@ from sys import version_info
 from bot.utils.logging import logger
 
 __version__ = "2.0"
-NAME = 'KOSP'
+NAME = 'Flamingo'
 
 if version_info[:2] < (3, 6):
-    logger.critical("KOSP needs version 3.6 or more")
+    logger.critical("Flamingo needs version 3.6 or more")
     quit()
 
 logger.info("Setting up ENV")

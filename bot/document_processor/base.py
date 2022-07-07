@@ -41,10 +41,9 @@ class DocumentProccesor(ABC):
 
         # Upload path of the final file
         device = find_device(file_name)
-        file_upload_path = "Release builds/A12/" + device
+        file_upload_path = "flamingo/A12/" + device
 
         try:
-
             # Use the context manager to manage a session instance
             my_drive = OneDrive(CLIENT_ID_ONEDRIVE, CLIENT_SECRET, TENANT,
                                 "http://localhost:8080", REFRESH_TOKEN)

@@ -1,4 +1,4 @@
-from .kosp import KOSP
+from .Flamingo import Flamingo
 
 if __name__ == "__main__":
-    KOSP().run()
+    Flamingo().run()

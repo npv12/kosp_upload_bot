@@ -8,7 +8,7 @@ from bot.utils.logging import logger
 from . import __version__
 
 
-class KOSP(Client):
+class Flamingo(Client):
 
     def __init__(self):
         name = self.__class__.__name__.lower()
@@ -23,7 +23,7 @@ class KOSP(Client):
             api_id=API_ID,
             api_hash=API_HASH,
             bot_token=BOT_TOKEN,
-            app_version=f"KOSP v{__version__}",
+            app_version=f"Flamingo v{__version__}",
             workdir=".",
             config_file=config_file,
             workers=8,
@@ -32,7 +32,7 @@ class KOSP(Client):
 
     def start(self):
         super().start()
-        logger.info(f"KOSP is running. Version is v{__version__}")
+        logger.info(f"Flamingo is running. Version is v{__version__}")
 
     def stop(self):
         super().stop()
