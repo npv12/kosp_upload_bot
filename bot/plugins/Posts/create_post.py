@@ -10,52 +10,12 @@ from bot.utils.parser import find_device, find_kosp_ver, parse_post_links
 banner_photos = [
     {
         "follow":
-        'https://sourceforge.net/projects/kosp/files/banners/Blue-Theme/Follow%20us.png/download',
+        '',
         "banner":
-        'https://sourceforge.net/projects/kosp/files/banners/Blue-Theme/KOSP%20banner.png/download',
+        '',
         "support":
-        'https://sourceforge.net/projects/kosp/files/banners/Blue-Theme/Support%20us.png/download'
-    },  # blue
-    {
-        "follow":
-        'https://sourceforge.net/projects/kosp/files/banners/Green-Theme/Follow%20us.png/download',
-        "banner":
-        'https://sourceforge.net/projects/kosp/files/banners/Green-Theme/KOSP%20banner.png/download',
-        "support":
-        'https://sourceforge.net/projects/kosp/files/banners/Green-Theme/Support%20us.png/download'
-    },  # Green
-    {
-        "follow":
-        'https://sourceforge.net/projects/kosp/files/banners/Red-Theme/Follow%20us.png/download',
-        "banner":
-        'https://sourceforge.net/projects/kosp/files/banners/Red-Theme/KOSP%20banner.png/download',
-        "support":
-        'https://sourceforge.net/projects/kosp/files/banners/Red-Theme/Support%20us.png/download'
-    },  # Red,
-    {
-        "follow":
-        'https://sourceforge.net/projects/kosp/files/banners/Rose-Theme/Follow%20us.png/download',
-        "banner":
-        'https://sourceforge.net/projects/kosp/files/banners/Rose-Theme/KOSP%20banner.png/download',
-        "support":
-        'https://sourceforge.net/projects/kosp/files/banners/Rose-Theme/Support%20us.png/download'
-    },  #Rose
-    {
-        "follow":
-        'https://sourceforge.net/projects/kosp/files/banners/Violet-Theme/Follow%20us.png/download',
-        "banner":
-        'https://sourceforge.net/projects/kosp/files/banners/Violet-Theme/KOSP%20banner.png/download',
-        "support":
-        'https://sourceforge.net/projects/kosp/files/banners/Violet-Theme/Support%20us.png/download'
-    },  # Violet
-    {
-        "follow":
-        'https://sourceforge.net/projects/kosp/files/banners/Yellow-Theme/Follow%20us.png/download',
-        "banner":
-        'https://sourceforge.net/projects/kosp/files/banners/Yellow-Theme/KOSP%20banner.png/download',
-        "support":
-        'https://sourceforge.net/projects/kosp/files/banners/Yellow-Theme/Support%20us.png/download'
-    },  # Yellow
+        ''
+    },
 ]
 
 
@@ -63,7 +23,7 @@ banner_photos = [
                    & ~filters.forwarded
                    & filters.command(commands=(["release"])))
 async def create_post(client, message):
-    logger.info("Someone called for me?")
+    logger.info("Creating a new post")
     if len(message.command) < 2:
         await message.reply_text("Feed me the links senpai")
         return
