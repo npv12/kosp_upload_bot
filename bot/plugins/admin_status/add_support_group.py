@@ -3,8 +3,7 @@ from bot.utils.logging import logger
 from bot.database.maintainer_details import maintainer_details
 
 
-@Client.on_message(~filters.sticker & ~filters.via_bot & ~filters.edited
-                   & ~filters.forwarded
+@Client.on_message(~filters.sticker & ~filters.via_bot & ~filters.forwarded
                    & filters.command(commands=(["addSupport"])))
 async def add_support_group(client, message):
     logger.info("Lets update the support group...")

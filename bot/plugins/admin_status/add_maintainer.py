@@ -3,7 +3,7 @@ from bot.utils.logging import logger
 from bot.database.maintainer_details import maintainer_details
 
 
-@Client.on_message(~filters.sticker & ~filters.via_bot & ~filters.edited
+@Client.on_message(~filters.sticker & ~filters.via_bot
                    & ~filters.forwarded & filters.command(commands=(["add"])))
 async def add_maintainer(client, message):
     logger.info("Lets add a new maintainer")

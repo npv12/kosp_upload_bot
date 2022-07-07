@@ -2,7 +2,7 @@ from pyrogram import filters, Client
 from bot.utils.logging import logger
 
 
-@Client.on_message(~filters.sticker & ~filters.via_bot & ~filters.edited
+@Client.on_message(~filters.sticker & ~filters.via_bot
                    & ~filters.forwarded & filters.command(commands=(["start"]))
                    )
 async def start(client, message):

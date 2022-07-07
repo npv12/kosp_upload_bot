@@ -19,13 +19,12 @@ class Flamingo(Client):
 
         plugins = dict(root="bot/plugins")
         super().__init__(
-            session_name=name,
+            name=name,
             api_id=API_ID,
             api_hash=API_HASH,
             bot_token=BOT_TOKEN,
             app_version=f"Flamingo v{__version__}",
             workdir=".",
-            config_file=config_file,
             workers=8,
             plugins=plugins,
         )

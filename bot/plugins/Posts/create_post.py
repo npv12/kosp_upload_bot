@@ -20,8 +20,7 @@ banner_photos = [
 ]
 
 
-@Client.on_message(~filters.sticker & ~filters.via_bot & ~filters.edited
-                   & ~filters.forwarded
+@Client.on_message(~filters.sticker & ~filters.via_bot & ~filters.forwarded
                    & filters.command(commands=(["release"])))
 async def create_post(client, message):
     logger.info("Creating a new post")

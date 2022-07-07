@@ -9,8 +9,7 @@ from bot.document_processor.factory import DocumentProcessorFactory
 from bot.utils.logging import logger
 
 
-@Client.on_message(~filters.sticker & ~filters.via_bot & ~filters.edited
-                   & ~filters.forwarded
+@Client.on_message(~filters.sticker & ~filters.via_bot & ~filters.forwarded
                    & filters.command(commands=(["Mirror", "mirror"])))
 async def mirror(client: bot, message):
 
