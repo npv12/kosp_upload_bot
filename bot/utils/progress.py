@@ -59,8 +59,8 @@ async def progress_callback(
     current: int, defines the amount of progress completed. can be in bytes
     total: int, defines the total amount of progress/parts to complete. can be in bytes 
     """
-
-    message_identifier = (message.chat.id, message.message_id)
+    
+    message_identifier = (message.chat.id, message.id)
     last_edit_time, prevtext, start_time = progress_callback_data.get(
         message_identifier, (0, None, time.time()))
     if current == total:
