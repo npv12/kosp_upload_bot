@@ -4,7 +4,7 @@ from sys import version_info
 
 from bot.utils.logging import logger
 
-__version__ = "2.0"
+__version__ = "2.1"
 NAME = 'Flamingo'
 
 if version_info[:2] < (3, 6):
