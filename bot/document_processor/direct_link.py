@@ -39,7 +39,7 @@ class DirectLink(DocumentProccesor):
         data = b''
 
         try:
-
+            logger.info("Starting download................")
             session = aiohttp.ClientSession()
             response = await session.get(url)
             total = int(response.headers["Content-Length"])

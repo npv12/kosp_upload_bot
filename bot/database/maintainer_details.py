@@ -116,6 +116,7 @@ class MaintainerDetails:
         if get_user is None:
             logger.info(f"user {user_id} not found in maintainer database")
             return False
+        logger.info(f"Found devices as {get_user['device']}")
         return get_user["device"]
 
     def get_maintainers(self, device: str):
