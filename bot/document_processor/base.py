@@ -41,7 +41,7 @@ class DocumentProccesor(ABC):
 
         # Upload path of the final file
         device = find_device(file_name)
-        file_upload_path = "flamingo/A12/" + device
+        file_upload_path = "flamingo/A12.1/" + device
 
         try:
             # Use the context manager to manage a session instance
