@@ -1,10 +1,10 @@
 Pillow>=5.3.0
-Pyrogram
+Pyrogram==2.0.30
 asyncio
 datetime
 TgCrypto
 aiohttp
 google-api-python-client
 google-api-core
-git+https://github.com/npv12/graph-onedrive@dcb5f08ed9619b40c23a42c9cca3769ffadfd0a5
+git+https://github.com/npv12/graph-onedrive@a9bc41f528acd68bc1ea65e927ae886269396de9
 pymongo[srv]
