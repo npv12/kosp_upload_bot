@@ -49,7 +49,7 @@ class DocumentProccesor(ABC):
                                 "http://localhost:8080", REFRESH_TOKEN)
 
         except:
-            raise Exception("Failed to login to OneDrive")
+            logger.error("Failed to login to OneDrive")
 
         # Get the details of all the items in the root directory
 
@@ -67,7 +67,7 @@ class DocumentProccesor(ABC):
                 logger.info("This user is not a maintainer of this device")
                 raise Exception("INVALID_DEVICE")
         except:
-            pass
+            logger.error("No devices found")
 
         try:
             items = my_drive.list_directory()
@@ -94,7 +94,7 @@ class DocumentProccesor(ABC):
                 verbose=False,
                 callback=self.__callback__)
 
-            url: str = BASE_URL + file_upload_path.replace(
+            url: str = BASE_URL + "d/" + file_upload_path.replace(
                 "flamingo/", "") + "/" + file_name
             return url
         except:

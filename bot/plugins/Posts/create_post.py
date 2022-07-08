@@ -1,6 +1,6 @@
-import asyncio
 from datetime import datetime
 import random
+import re
 from typing import List
 from pyrogram import filters, Client
 from bot import CHANNEL_ID
@@ -39,7 +39,7 @@ async def create_post(client, message):
 
     download_link_str: str = "Download:\n"
 
-    possible_links = ["rom", "fastboot", "incremental", "boot"]
+    possible_links = ["full", "fastboot", "incremental", "boot"]
 
     for link_type in possible_links:
 
@@ -65,7 +65,7 @@ async def create_post(client, message):
 
     Maintainers: {maintainer_str}
 
-    Device: {device}
+    Device: {re.sub("[A-Za-z]+", lambda ele: " " + ele[0].capitalize() + " ", device)}
     Date: {datetime.today().strftime('%d-%m-%y')}
 
     {download_link_str}
@@ -102,10 +102,8 @@ async def create_post(client, message):
         #     await client.send_photo(chat_id=CHANNEL_ID,
         #                             photo=banner_photos[random_int]["support"])
 
-        asyncio.gather(
-            # await client.send_message(chat_id=CHANNEL_ID, text=caption),
-            await client.send_message(chat_id=message.chat.id, text=caption),
-        )
+        await client.send_message(chat_id=CHANNEL_ID, text=caption),
+        await client.send_message(chat_id=message.chat.id, text=caption),
     
     except:
         await message.reply_text("Something went wrong")
