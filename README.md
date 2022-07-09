@@ -1,6 +1,8 @@
 # Flamingo Upload Bot
 A Telegram bot (based on [Pyrogram](https://docs.pyrogram.org/)) to mirror and upload files from any direct link or a gdrive link to our [hosted website](http://flamingo.e11z.net).
 
+## Repo moved to [Flamingo OS](https://github.com/Flamingo-OS/upload_bot)
+
 ## Setup virtual environment
 
 ```bash
