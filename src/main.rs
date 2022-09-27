@@ -1,11 +1,14 @@
+use futures::future::{self, pending};
 use std::{str, sync::Arc};
 use teloxide::{
-    adaptors::{AutoSend, Throttle, throttle::Limits},
-    prelude::*
+    adaptors::{throttle::Limits, AutoSend, Throttle},
+    prelude::*,
 };
-use futures::future::{self, pending};
+
+use crate::cancel_tasks::CancelableTasks;
 
 mod bot;
+mod cancel_tasks;
 mod cfg;
 mod plugins;
 
@@ -22,9 +25,11 @@ async fn main() {
 
     log::info!("Flamingo upload bot v{} is up and running...", VERSION);
 
+    let mut tasks = CancelableTasks::new();
+
     let (_abortable, abort_handle) = future::abortable(pending::<()>());
     let tg_loop = async {
-        bot::run(bot.clone()).await;
+        bot::run(bot.clone(), &mut tasks).await;
 
         // When bot stopped executing (e.g. because of ^C) stop pull loop
         abort_handle.abort();

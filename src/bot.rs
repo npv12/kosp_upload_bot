@@ -1,4 +1,4 @@
-use crate::{plugins, Bot};
+use crate::{cancel_tasks::CancelableTasks, plugins, Bot};
 use std::{fmt::Debug, ops::Not};
 use teloxide::{
     dptree::deps,
@@ -27,8 +27,11 @@ enum HErr {
     NotAdmin,
 }
 
-pub async fn run(bot: Bot) {
-    let commands = |bot: Bot, message: Message, command: Command| async move {
+pub async fn run(bot: Bot, tasks: &mut CancelableTasks) {
+    let id = rand::random::<u32>();
+    tasks.add_task(id);
+    log::info!("Starting bot with id {}", tasks.get_cancel_status(id));
+    let commands = |bot: Bot, message: Message, command: Command, tasks: &mut CancelableTasks| async move {
         log::info!(
             "Command received: {}",
             message.text().unwrap().replace("/", "")
