@@ -4,10 +4,12 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Pranav <npv12@iitbbs.ac.in>"]
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-teloxide = { version = "0.10", features = ["macros", "auto-send"] }
-log = "0.4"
+derive_more = "0.99.17"
+futures = "0.3.21"
+log = { version = "0.4.17", features = ["serde"] }
 pretty_env_logger = "0.4"
-tokio = { version =  "1.8", features = ["rt-multi-thread", "macros"] }
+serde = { version = "1.0.137", features = ["derive"] }
+teloxide = { version = "0.10", features = ["macros", "auto-send"] }
+tokio = { version = "1.8", features = ["rt-multi-thread", "macros"] }
+toml = "0.5.9"
