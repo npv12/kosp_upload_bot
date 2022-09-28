@@ -1,6 +1,6 @@
 use std::{str, sync::Arc};
 use teloxide::{
-    adaptors::{AutoSend},
+    adaptors::{AutoSend, Throttle, throttle::Limits},
     prelude::*
 };
 use futures::future::{self, pending};
@@ -9,7 +9,7 @@ mod bot;
 mod cfg;
 mod plugins;
 
-type Bot = AutoSend<teloxide::Bot>;
+type Bot = AutoSend<Throttle<teloxide::Bot>>;
 
 #[tokio::main]
 async fn main() {
@@ -17,6 +17,7 @@ async fn main() {
     const VERSION: &str = env!("CARGO_PKG_VERSION");
     let config = Arc::new(cfg::Config::read().expect("couldn't read config"));
     let bot = teloxide::Bot::new(&config.bot_token)
+        .throttle(Limits::default())
         .auto_send();
 
     log::info!("Flamingo upload bot v{} is up and running...", VERSION);

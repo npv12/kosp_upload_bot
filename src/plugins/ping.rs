@@ -1,7 +1,7 @@
 use std::time::SystemTime;
-use teloxide::{prelude::*, RequestError};
+use teloxide::{prelude::*, RequestError, adaptors::Throttle};
 
-pub async fn ping(bot: AutoSend<Bot>, message: Message) -> Result<Message, RequestError> {
+pub async fn ping(bot: AutoSend<Throttle<Bot>>, message: Message) -> Result<Message, RequestError> {
     let start = SystemTime::now();
     let msg = bot
         .send_message(message.chat.id, "Pinging........!")
