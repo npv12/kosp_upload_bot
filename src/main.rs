@@ -23,7 +23,7 @@ async fn main() {
 
     let (_abortable, abort_handle) = future::abortable(pending::<()>());
     let tg_loop = async {
-        bot::run(bot.clone(), config).await;
+        bot::run(bot.clone()).await;
 
         // When bot stopped executing (e.g. because of ^C) stop pull loop
         abort_handle.abort();

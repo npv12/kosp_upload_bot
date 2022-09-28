@@ -1,5 +1,5 @@
-use crate::{Bot, cfg::Config, plugins};
-use std::{fmt::Debug, ops::Not, sync::Arc};
+use crate::{plugins, Bot};
+use std::{fmt::Debug, ops::Not};
 use teloxide::{
     dptree::deps,
     prelude::{Requester, *},
@@ -27,7 +27,7 @@ enum HErr {
     NotAdmin,
 }
 
-pub async fn run(bot: Bot, cfg: Arc<Config>) {
+pub async fn run(bot: Bot) {
     let commands = |bot: Bot, message: Message, command: Command| async move {
         log::info!(
             "Command received: {}",
@@ -54,7 +54,7 @@ pub async fn run(bot: Bot, cfg: Arc<Config>) {
     );
 
     Dispatcher::builder(bot, handler)
-        .dependencies(deps![cfg])
+        .dependencies(deps![])
         .default_handler(|_| async {})
         .build()
         .dispatch()
