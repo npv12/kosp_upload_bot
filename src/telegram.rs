@@ -1,5 +1,8 @@
 use crate::{cancel_cmds::CancelableCommands, cfg, plugins};
-use grammers_client::{Client, Config, InitParams};
+use grammers_client::{
+    types::{Chat, Message},
+    Client, Config, InitParams, Update,
+};
 use grammers_session::Session;
 use log;
 use std::sync::Arc;
@@ -47,7 +50,7 @@ pub async fn async_main() -> Result {
         let handle = client.clone();
         let cmd = cancel_cmd.clone();
         task::spawn(async move {
-            match plugins::handle_update(handle, update, cmd).await {
+            match handle_update(handle, update, cmd).await {
                 Ok(_) => {}
                 Err(e) => log::error!("Error handling updates!: {}", e),
             }
@@ -57,4 +60,18 @@ pub async fn async_main() -> Result {
     log::warn!("Saving session file and exiting...");
     client.session().save_to_file(SESSION_FILE)?;
     Ok(())
+}
+
+async fn handle_update(client: Client, update: Update, cancel_cmds: CancelableCommands) -> Result {
+    match update {
+        Update::NewMessage(message) if check_privilages(&message) => {
+            plugins::handle_msg(client, message, cancel_cmds).await?
+        }
+        _ => {}
+    }
+    Ok(())
+}
+
+fn check_privilages(message: &Message) -> bool {
+    return !message.outgoing() && matches!(message.chat(), Chat::User(_));
 }

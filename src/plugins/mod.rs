@@ -1,8 +1,5 @@
 use crate::cancel_cmds::CancelableCommands;
-use grammers_client::{
-    types::{Chat, Message},
-    Client, Update,
-};
+use grammers_client::{types::Message, Client};
 
 mod cancel;
 mod ping;
@@ -18,18 +15,11 @@ enum Command {
     Start,
 }
 
-pub async fn handle_update(client: Client, update: Update, cancel_cmds: CancelableCommands) -> Result {
-    match update {
-        Update::NewMessage(message) if check_privilages(&message) => {
-            handle_msg(client, message, cancel_cmds).await?
-        }
-        _ => {}
-    }
-
-    Ok(())
-}
-
-async fn handle_msg(client: Client, message: Message, cancel_cmds: CancelableCommands) -> Result {
+pub async fn handle_msg(
+    client: Client,
+    message: Message,
+    cancel_cmds: CancelableCommands,
+) -> Result {
     let msg = message.text();
     let chat = message.chat();
     let cmd = msg.split_whitespace().next().unwrap();
@@ -62,8 +52,4 @@ async fn handle_msg(client: Client, message: Message, cancel_cmds: CancelableCom
     }
 
     Ok(())
-}
-
-fn check_privilages(message: &Message) -> bool {
-    return !message.outgoing() && matches!(message.chat(), Chat::User(_));
 }
