@@ -7,6 +7,8 @@ pub struct Config {
     pub api_hash: String,
     /// Token of the telegram bot
     pub bot_token: String,
+    // monogoDB uri
+    pub mongo_uri: String,
 }
 
 impl Config {

@@ -1,4 +1,4 @@
-use crate::{cancel_cmds::CancelableCommands, cfg, plugins};
+use crate::{cancel_cmds::CancelableCommands, cfg, database, plugins};
 use grammers_client::{
     types::{Chat, Message},
     Client, Config, InitParams, Update,
@@ -42,6 +42,7 @@ pub async fn async_main() -> Result {
     log::info!("Waiting for messages...");
 
     let cancel_cmd = CancelableCommands::new();
+    let database = database::Db::new(config.mongo_uri.to_string()).await;
 
     while let Some(update) = tokio::select! {
         _ = tokio::signal::ctrl_c() => Ok(None),

@@ -5,9 +5,12 @@ authors = ["Pranav <npv12@iitbbs.ac.in>"]
 edition = "2021"
 
 [dependencies]
+bson = { version = "2.4.0", features = ["chrono-0_4"] }
+chrono = "0.4"
 grammers-client = { git = "https://github.com/Lonami/grammers" }
 grammers-session = { git = "https://github.com/Lonami/grammers" }
 log = { version = "0.4.17" }
+mongodb = "2.3.0"
 rand = "0.8.5"
 serde = { version = "1.0.137", features = ["derive"] }
 simple_logger = "2.3.0"
