@@ -1,3 +1,4 @@
 /target
 .vscode
 echo.session
+config.toml

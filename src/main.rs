@@ -1,20 +1,12 @@
-//! Example to echo user text messages. Updates are handled concurrently.
-//!
-//! The `TG_ID` and `TG_HASH` environment variables must be set (learn how to do it for
-//! [Windows](https://ss64.com/nt/set.html) or [Linux](https://ss64.com/bash/export.html))
-//! to Telegram's API ID and API hash respectively.
-//!
-//! Then, run it as:
-//!
-//! ```sh
-//! cargo run --example echo -- BOT_TOKEN
-//! ```
+use std::sync::Arc;
 
 use grammers_client::{Client, Config, InitParams, Update};
 use grammers_session::Session;
 use log;
 use simple_logger::SimpleLogger;
 use tokio::{runtime, task};
+
+mod cfg;
 
 type Result = std::result::Result<(), Box<dyn std::error::Error>>;
 
@@ -39,9 +31,10 @@ async fn async_main() -> Result {
         .init()
         .unwrap();
 
-    let api_id = env!("TG_ID").parse().expect("TG_ID invalid");
-    let api_hash = env!("TG_HASH").to_string();
-    let token = env::args().skip(1).next().expect("token missing");
+    let config = Arc::new(cfg::Config::read().expect("couldn't read config"));
+    let api_id = config.clone().api_id;
+    let api_hash = &config.api_hash;
+    let token = &config.bot_token;
 
     log::warn!("Connecting to Telegram...");
     let mut client = Client::connect(Config {
