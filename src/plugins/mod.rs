@@ -7,12 +7,14 @@ mod help;
 mod maintainer;
 mod ping;
 mod release;
+mod support_group;
 
 type Result = std::result::Result<(), Box<dyn std::error::Error>>;
 
 #[derive(Debug)]
 enum Command {
     AddMaintainer(String),
+    AddSupportGroup(String),
     Cancel(String),
     Help,
     Ping,
@@ -34,6 +36,7 @@ pub async fn handle_msg(
     let args = msg.split(" ").into_iter().map(|s| s.into()).collect();
     let cmd = match cmd {
         "/add" => Command::AddMaintainer(msg.to_string()),
+        "/add_support" => Command::AddSupportGroup(msg.to_string()),
         "/cancel" => Command::Cancel(msg.to_string()),
         "/help" => Command::Help,
         "/ping" => Command::Ping,
@@ -47,6 +50,9 @@ pub async fn handle_msg(
     match cmd {
         Command::AddMaintainer(msg) => {
             maintainer::add_maintainer(client, message, database, msg).await?
+        }
+        Command::AddSupportGroup(msg) => {
+            support_group::add_support_group(client, message, database, msg).await?
         }
         Command::Cancel(cmd) => cancel::cancel(client, message, cancel_cmds, cmd).await?,
         Command::Help => help::help(client, message).await?,

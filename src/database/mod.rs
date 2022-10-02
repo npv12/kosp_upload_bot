@@ -7,6 +7,7 @@ use mongodb::{
 
 mod admin;
 mod maintainer;
+mod support_group;
 
 #[derive(Clone)]
 pub struct Db {
