@@ -9,6 +9,13 @@ pub async fn release(
     mut cancel_cmds: CancelableCommands,
     links: Vec<String>,
 ) -> Result {
+    if links.len() < 2 {
+        client
+            .send_message(message.chat(), "Please provide a link to the file")
+            .await?;
+        return Ok(());
+    }
+
     let id = rand::random::<u32>();
     if id == 0 {
         client
@@ -17,6 +24,7 @@ pub async fn release(
         return Ok(());
     }
     cancel_cmds.insert(id);
+
     let mut msg = client
         .send_message(
             message.chat(),
@@ -24,6 +32,7 @@ pub async fn release(
         )
         .await?;
 
+    // Final check to see if the user canceled the command before making the post
     if cancel_cmds.get_cancel_status(id) {
         msg.edit(format!("Process cancelled by user")).await?;
         return Ok(());
