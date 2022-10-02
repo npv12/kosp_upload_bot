@@ -10,6 +10,12 @@ pub async fn release(
     links: Vec<String>,
 ) -> Result {
     let id = rand::random::<u32>();
+    if id == 0 {
+        client
+            .send_message(message.chat(), "Failed to generate a random id")
+            .await?;
+        return Ok(());
+    }
     cancel_cmds.insert(id);
     let mut msg = client
         .send_message(

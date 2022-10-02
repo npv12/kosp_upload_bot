@@ -16,7 +16,13 @@ pub async fn cancel(
             .await?;
         return Ok(());
     }
-    let id = cmds[1].parse::<u32>().unwrap();
+    let id = cmds[1].parse::<u32>().unwrap_or(0);
+    if id == 0 {
+        client
+            .send_message(message.chat(), "Invalid command id")
+            .await?;
+        return Ok(());
+    }
     cancel_cmds.cancel(id);
     client
         .send_message(message.chat(), format!("Cancelling task with id {}", id))
