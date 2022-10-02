@@ -14,7 +14,6 @@ use grammers_client::{Client, Config, InitParams, Update};
 use grammers_session::Session;
 use log;
 use simple_logger::SimpleLogger;
-use std::env;
 use tokio::{runtime, task};
 
 type Result = std::result::Result<(), Box<dyn std::error::Error>>;
@@ -36,7 +35,7 @@ async fn handle_update(client: Client, update: Update) -> Result {
 
 async fn async_main() -> Result {
     SimpleLogger::new()
-        .with_level(log::LevelFilter::Debug)
+        .with_level(log::LevelFilter::Info)
         .init()
         .unwrap();
 
@@ -44,7 +43,7 @@ async fn async_main() -> Result {
     let api_hash = env!("TG_HASH").to_string();
     let token = env::args().skip(1).next().expect("token missing");
 
-    println!("Connecting to Telegram...");
+    log::warn!("Connecting to Telegram...");
     let mut client = Client::connect(Config {
         session: Session::load_file_or_create(SESSION_FILE)?,
         api_id,
@@ -56,16 +55,16 @@ async fn async_main() -> Result {
         },
     })
     .await?;
-    println!("Connected!");
+    log::warn!("Connected!");
 
     if !client.is_authorized().await? {
-        println!("Signing in...");
+        log::info!("Signing in...");
         client.bot_sign_in(&token, api_id, &api_hash).await?;
         client.session().save_to_file(SESSION_FILE)?;
-        println!("Signed in!");
+        log::info!("Signed in!");
     }
 
-    println!("Waiting for messages...");
+    log::debug!("Waiting for messages...");
 
     // This code uses `select!` on Ctrl+C to gracefully stop the client and have a chance to
     // save the session. You could have fancier logic to save the session if you wanted to
@@ -79,12 +78,12 @@ async fn async_main() -> Result {
         task::spawn(async move {
             match handle_update(handle, update).await {
                 Ok(_) => {}
-                Err(e) => eprintln!("Error handling updates!: {}", e),
+                Err(e) => log::error!("Error handling updates!: {}", e),
             }
         });
     }
 
-    println!("Saving session file and exiting...");
+    log::warn!("Saving session file and exiting...");
     client.session().save_to_file(SESSION_FILE)?;
     Ok(())
 }
