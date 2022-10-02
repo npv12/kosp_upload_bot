@@ -3,6 +3,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+#[derive(Clone)]
 pub struct CancelableCommands {
     cancel_cmds: Arc<Mutex<HashMap<u32, bool>>>,
 }
@@ -42,10 +43,5 @@ impl CancelableCommands {
         let mut guard = self.lock();
         guard.remove(&id);
         self.unlock(guard);
-    }
-    pub fn clone(&self) -> Self {
-        Self {
-            cancel_cmds: self.cancel_cmds.clone(),
-        }
     }
 }

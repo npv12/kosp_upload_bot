@@ -1,4 +1,8 @@
-use crate::{cancel_cmds::CancelableCommands, cfg, database, plugins};
+use crate::{
+    cancel_cmds::CancelableCommands,
+    cfg,
+    plugins, database,
+};
 use grammers_client::{
     types::{Chat, Message},
     Client, Config, InitParams, Update,
@@ -14,6 +18,8 @@ const SESSION_FILE: &str = "echo.session";
 
 pub async fn async_main() -> Result {
     let config = Arc::new(cfg::Config::read().expect("cannot read the config"));
+    let cancel_cmds = CancelableCommands::new();
+    let db = database::Db::new(config.mongo_uri.clone()).await;
     let api_id = config.clone().api_id;
     let api_hash = &config.api_hash;
     let token = &config.bot_token;
@@ -41,17 +47,20 @@ pub async fn async_main() -> Result {
 
     log::info!("Waiting for messages...");
 
-    let cancel_cmd = CancelableCommands::new();
-    let database = database::Db::new(config.mongo_uri.to_string()).await;
-
     while let Some(update) = tokio::select! {
         _ = tokio::signal::ctrl_c() => Ok(None),
         result = client.next_update() => result,
     }? {
         let handle = client.clone();
-        let cmd = cancel_cmd.clone();
+        let cmd = cancel_cmds.clone();
+        let db_clone = db.clone();
         task::spawn(async move {
-            match handle_update(handle, update, cmd).await {
+            match handle_update(
+                handle,
+                update,
+                cmd, db_clone)
+            .await
+            {
                 Ok(_) => {}
                 Err(e) => log::error!("Error handling updates!: {}", e),
             }
@@ -63,10 +72,15 @@ pub async fn async_main() -> Result {
     Ok(())
 }
 
-async fn handle_update(client: Client, update: Update, cancel_cmds: CancelableCommands) -> Result {
+async fn handle_update(
+    client: Client,
+    update: Update,
+    cancel_cmds: CancelableCommands,
+    db: database::Db,
+) -> Result {
     match update {
         Update::NewMessage(message) if check_privilages(&message) => {
-            plugins::handle_msg(client, message, cancel_cmds).await?
+            plugins::handle_msg(client, message, cancel_cmds, db).await?
         }
         _ => {}
     }
@@ -74,5 +88,7 @@ async fn handle_update(client: Client, update: Update, cancel_cmds: CancelableCo
 }
 
 fn check_privilages(message: &Message) -> bool {
-    return !message.outgoing() && matches!(message.chat(), Chat::User(_));
+    let prvt_grp = matches!(message.chat(), Chat::Group(_)) && matches!(message.chat().id(), 1599684071);
+    let is_dm = matches!(message.chat(), Chat::User(_));
+    return !message.outgoing() && (prvt_grp || is_dm);
 }

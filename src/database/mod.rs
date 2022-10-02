@@ -1,12 +1,14 @@
+use std::sync::Arc;
+
 use mongodb::{
     options::{ClientOptions, ResolverConfig},
     Client, Database,
 };
-use std::error::Error;
+mod add_maintainer;
 
+#[derive(Clone)]
 pub struct Db {
-    client: Client,
-    flamingo_db: Database
+    db: Arc<Database>,
 }
 
 impl Db {
@@ -15,14 +17,6 @@ impl Db {
             .await
             .unwrap();
         let client = Client::with_options(options).unwrap();
-        Self { client: client.clone(), flamingo_db: client.database("kosp") }
-    }
-    // temp fun for future ref
-    // TODO: drop this later on
-    async fn print(&self) -> Result<(), Box<dyn Error>> {
-        println!("Databases:");
-        Ok(for name in self.client.list_database_names(None, None).await? {
-            println!("- {}", name);
-        })
+        Self { db: Arc::new(client.database("kosp")) }
     }
 }
