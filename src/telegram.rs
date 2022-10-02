@@ -3,7 +3,6 @@ use std::sync::Arc;
 use grammers_client::{Client, Config, InitParams};
 use grammers_session::Session;
 use log;
-use simple_logger::SimpleLogger;
 use tokio::task;
 
 use crate::{cfg, plugins};
@@ -13,11 +12,6 @@ type Result = std::result::Result<(), Box<dyn std::error::Error>>;
 const SESSION_FILE: &str = "echo.session";
 
 pub async fn async_main() -> Result {
-    SimpleLogger::new()
-        .with_level(log::LevelFilter::Info)
-        .init()
-        .unwrap();
-
     let config = Arc::new(cfg::Config::read().expect("cannot read the config"));
     let api_id = config.clone().api_id;
     let api_hash = &config.api_hash;
