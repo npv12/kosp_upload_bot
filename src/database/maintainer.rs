@@ -15,9 +15,11 @@ impl Db {
         let found_col = collection.find_one(filter.clone(), None).await?;
 
         if found_col != None {
+            log::warn!("User is already a maintainer. So, adding device to the list");
             let update = doc! { "$push": { "devices": device } };
             collection.update_one(filter.clone(), update, None).await?;
         } else {
+            log::warn!("User is not a maintainer. So, adding user to the list");
             let doc = doc! {
                 "name": maintainer,
                 "user_id": user_id,

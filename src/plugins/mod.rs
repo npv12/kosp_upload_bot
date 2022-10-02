@@ -1,18 +1,21 @@
 use crate::{cancel_cmds::CancelableCommands, database};
 use grammers_client::{types::Message, Client};
 
-mod add_maintainer;
+mod maintainer;
 mod cancel;
 mod ping;
+mod admin;
 mod release;
 
 type Result = std::result::Result<(), Box<dyn std::error::Error>>;
 
+#[derive(Debug)]
 enum Command {
     AddMaintainer(String),
     Cancel(String),
     Help,
     Ping,
+    PromoteMaintainer(),
     Release(Vec<String>),
     Start,
 }
@@ -32,14 +35,15 @@ pub async fn handle_msg(
         "/cancel" => Command::Cancel(msg.to_string()),
         "/help" => Command::Help,
         "/ping" => Command::Ping,
+        "/promote" => Command::PromoteMaintainer(),
         "/release" => Command::Release(args),
         "/start" => Command::Start,
         _ => return Ok(()),
     };
-
+    log::info!("Recieved request to handle command: {:?}", cmd);
     match cmd {
         Command::AddMaintainer(msg) => {
-            add_maintainer::add_maintainer(client, message, database, msg).await?
+            maintainer::add_maintainer(client, message, database, msg).await?
         }
         Command::Cancel(cmd) => cancel::cancel(client, message, cancel_cmds, cmd).await?,
         Command::Help => {
@@ -52,6 +56,9 @@ pub async fn handle_msg(
             client.send_message(chat, help_msg).await?;
         }
         Command::Ping => ping::ping(client, message).await?,
+        Command::PromoteMaintainer() => {
+            admin::promote_maintainer(client, message, database).await?
+        }
         Command::Release(links) => release::release(client, message, cancel_cmds, links).await?,
         Command::Start => {
             client.send_message(chat, "Hello!").await?;

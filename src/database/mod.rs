@@ -4,6 +4,8 @@ use mongodb::{
     options::{ClientOptions, ResolverConfig},
     Client, Database,
 };
+
+mod admin;
 mod maintainer;
 
 #[derive(Clone)]
