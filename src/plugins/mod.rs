@@ -1,10 +1,10 @@
 use crate::{cancel_cmds::CancelableCommands, database};
 use grammers_client::{types::Message, Client};
 
-mod maintainer;
-mod cancel;
-mod ping;
 mod admin;
+mod cancel;
+mod maintainer;
+mod ping;
 mod release;
 
 type Result = std::result::Result<(), Box<dyn std::error::Error>>;
@@ -59,7 +59,9 @@ pub async fn handle_msg(
         Command::PromoteMaintainer() => {
             admin::promote_maintainer(client, message, database).await?
         }
-        Command::Release(links) => release::release(client, message, cancel_cmds, links).await?,
+        Command::Release(links) => {
+            release::release(client, message, cancel_cmds, links, database).await?
+        }
         Command::Start => {
             client.send_message(chat, "Hello!").await?;
         }

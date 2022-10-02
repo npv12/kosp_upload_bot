@@ -1,4 +1,4 @@
-use crate::cancel_cmds::CancelableCommands;
+use crate::{cancel_cmds::CancelableCommands, database};
 use grammers_client::{types::Message, Client};
 
 type Result = std::result::Result<(), Box<dyn std::error::Error>>;
@@ -8,7 +8,15 @@ pub async fn release(
     message: Message,
     mut cancel_cmds: CancelableCommands,
     links: Vec<String>,
+    database: database::Db,
 ) -> Result {
+    let user_id = message.sender().unwrap().id();
+    let is_admin = database.is_admin(user_id).await?;
+    if !is_admin {
+        log::error!("User is not an admin");
+        client.send_message(message.chat(), "You are not an admin").await?;
+        return Ok(());
+    }
     if links.len() < 2 {
         client
             .send_message(message.chat(), "Please provide a link to the file")
@@ -28,7 +36,10 @@ pub async fn release(
     let mut msg = client
         .send_message(
             message.chat(),
-            format!("Creating a release post for you with {:?}\nUse `/cancel {}` to cancel it", links, id),
+            format!(
+                "Creating a release post for you with {:?}\nUse `/cancel {}` to cancel it",
+                links, id
+            ),
         )
         .await?;
 

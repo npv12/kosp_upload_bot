@@ -10,6 +10,11 @@ impl Db {
         user_id: i64,
         device: String,
     ) -> Result<(), Box<dyn Error>> {
+        let is_admin =  self.is_admin(user_id).await?;
+        if !is_admin {
+            log::error!("User is not an admin");
+            return Ok(());
+        }
         let collection = self.db.collection("maintainer");
         let filter = doc! { "user_id": user_id };
         let found_col = collection.find_one(filter.clone(), None).await?;
