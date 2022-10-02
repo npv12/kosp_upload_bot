@@ -5,6 +5,8 @@ use grammers_client::{
 };
 use std::sync::{Arc, Mutex};
 
+mod ping;
+
 type Result = std::result::Result<(), Box<dyn std::error::Error>>;
 
 enum Command {
@@ -53,7 +55,7 @@ async fn handle_msg(client: Client, message: Message, tasks: Arc<Mutex<Cancelabl
             client.send_message(chat, help_msg).await?;
         }
         Command::Ping => {
-            client.send_message(chat, "Pong!").await?;
+            ping::ping(client, message).await?
         }
         Command::Release(release) => {
             let id = rand::random::<i32>();
