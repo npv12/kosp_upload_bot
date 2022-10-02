@@ -12,9 +12,10 @@ pub async fn release(
 ) -> Result {
     let user_id = message.sender().unwrap().id();
     let is_admin = database.is_admin(user_id).await?;
-    if !is_admin {
-        log::error!("User is not an admin");
-        client.send_message(message.chat(), "You are not an admin").await?;
+    let is_maintainer = database.is_maintainer(user_id, "guacamole").await?;
+    if !is_admin && !is_maintainer {
+        log::error!("User is not an admin ot a maintainer");
+        client.send_message(message.chat(), "You are not a maintainer").await?;
         return Ok(());
     }
     if links.len() < 2 {

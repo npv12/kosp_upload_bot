@@ -1,4 +1,5 @@
 use bson::doc;
+use mongodb::Collection;
 use std::error::Error;
 
 use super::Db;
@@ -10,7 +11,7 @@ impl Db {
         user_id: i64,
         device: String,
     ) -> Result<(), Box<dyn Error>> {
-        let is_admin =  self.is_admin(user_id).await?;
+        let is_admin = self.is_admin(user_id).await?;
         if !is_admin {
             log::error!("User is not an admin");
             return Ok(());
@@ -36,5 +37,26 @@ impl Db {
             collection.insert_one(doc, None).await?;
         }
         Ok(())
+    }
+
+    pub async fn is_maintainer(
+        &self,
+        user_id: i64,
+        device_name: &str,
+    ) -> Result<bool, Box<dyn Error>> {
+        let collection: Collection<bson::Document> = self.db.collection("maintainer");
+        let filter: bson::Document = doc! { "user_id": user_id, "is_maintainer": true };
+        let found_col: Option<bson::Document> = collection.find_one(filter.clone(), None).await?;
+
+        if found_col != None {
+            let data = found_col.unwrap();
+            let devices = data.get_array("devices").unwrap();
+            for device in devices {
+                if device.as_str().unwrap() == device_name {
+                    return Ok(true);
+                }
+            }
+        }
+        return Ok(false);
     }
 }
