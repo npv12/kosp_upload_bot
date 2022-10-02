@@ -35,7 +35,7 @@ async fn handle_msg(client: Client, message: Message, cancel_cmds: CancelableCom
     let cmd = msg.split_whitespace().next().unwrap();
     let args = msg.split(" ").into_iter().map(|s| s.into()).collect();
     let cmd = match cmd {
-        "/cancel" => Command::Cancel(cmd.to_string()),
+        "/cancel" => Command::Cancel(msg.to_string()),
         "/help" => Command::Help,
         "/ping" => Command::Ping,
         "/release" => Command::Release(args),

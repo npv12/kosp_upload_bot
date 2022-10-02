@@ -7,9 +7,16 @@ pub async fn cancel(
     client: Client,
     message: Message,
     mut cancel_cmds: CancelableCommands,
-    cmd: String,
+    msg: String,
 ) -> Result {
-    let id = cmd.parse::<i32>().unwrap_or(0);
+    let cmds = msg.split(" ").into_iter().map(|s| s.into()).collect::<Vec<String>>();
+    if cmds.len() < 2 {
+        client
+            .send_message(message.chat(), "You didn't provide a command id")
+            .await?;
+        return Ok(());
+    }
+    let id = cmds[1].parse::<u32>().unwrap();
     cancel_cmds.cancel(id);
     client
         .send_message(message.chat(), format!("Cancelling task with id {}", id))
