@@ -33,12 +33,10 @@ impl Db {
         user_id: i64,
     ) -> Result<bool, Box<dyn Error>> {
         let collection: Collection<bson::Document> = self.db.collection("maintainer");
-        let filter: bson::Document = doc! { "user_id": user_id };
-        let found_col: Option<bson::Document> = collection.find_one(filter.clone(), None).await?;
+        let filter: bson::Document = doc! { "user_id": user_id, "is_admin": true };
 
-        if found_col != None {
-            let is_admin: bool = found_col.unwrap().get_bool("is_admin").unwrap();
-            return Ok(is_admin);
+        if collection.find_one(filter.clone(), None).await? != None {
+            return Ok(true);
         } else {
             return Ok(false);
         }

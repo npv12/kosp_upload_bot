@@ -22,7 +22,7 @@ impl Db {
 
         if found_col != None {
             log::warn!("User is already a maintainer. So, adding device to the list");
-            let update = doc! { "$push": { "devices": device } };
+            let update = doc! { "$push": { "devices": device }, "$set": { "is_maintainer": true } };
             collection.update_one(filter.clone(), update, None).await?;
         } else {
             log::warn!("User is not a maintainer. So, adding user to the list");
@@ -46,12 +46,13 @@ impl Db {
             return Ok(());
         }
         let collection: Collection<bson::Document> = self.db.collection("maintainer");
-        let filter: bson::Document = doc! { "user_id": user_id };
+        let filter: bson::Document = doc! { "user_id": user_id, "is_maintainer": true };
         let found_col = collection.find_one(filter.clone(), None).await?;
 
         if found_col != None {
             log::info!("Removing the user");
-            collection.delete_one(filter.clone(), None).await?;
+            let update = doc! {  "$set": { "is_maintainer": false } };
+            collection.update_one(filter.clone(), update, None).await?;
         } else {
             log::error!("User is not a maintainer");
         }
