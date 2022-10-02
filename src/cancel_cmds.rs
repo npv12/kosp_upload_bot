@@ -1,49 +1,48 @@
-use std::{collections::HashMap, sync::{Arc, Mutex}};
+use std::{
+    collections::HashMap,
+    sync::{Arc, Mutex},
+};
 
 pub struct CancelableCommands {
-    pub cancel_cmds: HashMap<i32, bool>,
+    cancel_cmds: Arc<Mutex<HashMap<i32, bool>>>,
 }
 
-unsafe impl Send for CancelableCommands {}
-
 impl CancelableCommands {
-    pub fn add_cmd(&mut self, id: i32) {
-        self.cancel_cmds.insert(id, false);
+    fn lock(&self) -> std::sync::MutexGuard<HashMap<i32, bool>> {
+        log::debug!("Locking cancel_cmds");
+        self.cancel_cmds.lock().unwrap()
     }
-    pub fn cancel_cmd(&mut self, id: i32) {
-        self.cancel_cmds.insert(id, true);
+    fn unlock(&self, guard: std::sync::MutexGuard<HashMap<i32, bool>>) {
+        log::info!("Current tasks include: {:?}", guard);
+        log::debug!("Unlocking cancel_cmds");
+        drop(guard);
+    }
+    pub fn insert(&mut self, id: i32) {
+        let mut guard = self.lock();
+        guard.insert(id, false);
+        self.unlock(guard);
+    }
+    pub fn cancel(&mut self, id: i32) {
+        let mut guard = self.lock();
+        guard.insert(id, true);
+        self.unlock(guard);
     }
     // pub fn get_cancel_status(&self, id: i32) -> bool {
     //     self.cancel_cmds.get(&id).unwrap().clone()
     // }
     pub fn new() -> Self {
         Self {
-            cancel_cmds: HashMap::new(),
+            cancel_cmds: Arc::new(Mutex::new(HashMap::new())),
         }
     }
-    pub fn drop_cmd(&mut self, id: i32) {
-        log::info!("Dropping task {}", id);
-        self.cancel_cmds.remove(&id);
+    pub fn remove(&mut self, id: i32) {
+        let mut guard = self.lock();
+        guard.remove(&id);
+        self.unlock(guard);
     }
-}
-
-pub fn add_cmds(tasks: &Arc<Mutex<CancelableCommands>>, id: &i32) {
-    let mut my_task = tasks.lock().unwrap();
-    my_task.add_cmd(*id);
-    log::debug!("Tasks: {:?}", my_task.cancel_cmds);
-    drop(my_task);
-}
-
-pub fn drop_cmds(tasks: &Arc<Mutex<CancelableCommands>>, id: &i32) {
-    let mut my_task = tasks.lock().unwrap();
-    my_task.drop_cmd(*id);
-    log::debug!("Tasks: {:?}", my_task.cancel_cmds);
-    drop(my_task);
-}
-
-pub fn cancel_cmds(tasks: &Arc<Mutex<CancelableCommands>>, id: &i32) {
-    let mut my_task = tasks.lock().unwrap();
-    my_task.cancel_cmd(*id);
-    log::debug!("Tasks: {:?}", my_task.cancel_cmds);
-    drop(my_task);
+    pub fn clone(&self) -> Self {
+        Self {
+            cancel_cmds: self.cancel_cmds.clone(),
+        }
+    }
 }

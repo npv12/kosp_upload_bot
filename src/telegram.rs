@@ -2,7 +2,7 @@ use crate::{cancel_cmds::CancelableCommands, cfg, plugins};
 use grammers_client::{Client, Config, InitParams};
 use grammers_session::Session;
 use log;
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use tokio::task;
 
 type Result = std::result::Result<(), Box<dyn std::error::Error>>;
@@ -38,7 +38,7 @@ pub async fn async_main() -> Result {
 
     log::info!("Waiting for messages...");
 
-    let cancel_cmd = Arc::new(Mutex::new(CancelableCommands::new()));
+    let cancel_cmd = CancelableCommands::new();
 
     while let Some(update) = tokio::select! {
         _ = tokio::signal::ctrl_c() => Ok(None),

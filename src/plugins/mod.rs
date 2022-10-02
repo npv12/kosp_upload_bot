@@ -3,7 +3,6 @@ use grammers_client::{
     types::{Chat, Message},
     Client, Update,
 };
-use std::sync::{Arc, Mutex};
 
 mod cancel;
 mod ping;
@@ -19,14 +18,10 @@ enum Command {
     Start,
 }
 
-pub async fn handle_update(
-    client: Client,
-    update: Update,
-    tasks: Arc<Mutex<CancelableCommands>>,
-) -> Result {
+pub async fn handle_update(client: Client, update: Update, cancel_cmds: CancelableCommands) -> Result {
     match update {
         Update::NewMessage(message) if check_privilages(&message) => {
-            handle_msg(client, message, tasks).await?
+            handle_msg(client, message, cancel_cmds).await?
         }
         _ => {}
     }
@@ -34,11 +29,7 @@ pub async fn handle_update(
     Ok(())
 }
 
-async fn handle_msg(
-    client: Client,
-    message: Message,
-    tasks: Arc<Mutex<CancelableCommands>>,
-) -> Result {
+async fn handle_msg(client: Client, message: Message, cancel_cmds: CancelableCommands) -> Result {
     let msg = message.text();
     let chat = message.chat();
     let cmd = msg.split_whitespace().next().unwrap();
@@ -53,7 +44,7 @@ async fn handle_msg(
     };
 
     match cmd {
-        Command::Cancel(cmd) => cancel::cancel(client, message, tasks, cmd).await?,
+        Command::Cancel(cmd) => cancel::cancel(client, message, cancel_cmds, cmd).await?,
         Command::Help => {
             let help_msg = "Hello! I'm Flamingo upload bot. I can upload files to your server. \
             These are the available commands:\n\
@@ -64,7 +55,7 @@ async fn handle_msg(
             client.send_message(chat, help_msg).await?;
         }
         Command::Ping => ping::ping(client, message).await?,
-        Command::Release(links) => release::release(client, message, tasks, links).await?,
+        Command::Release(links) => release::release(client, message, cancel_cmds, links).await?,
         Command::Start => {
             client.send_message(chat, "Hello!").await?;
         }
