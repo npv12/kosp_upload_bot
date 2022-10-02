@@ -1,4 +1,4 @@
-use crate::cancel_cmds::{add_cmds, drop_cmds, CancelableCommands};
+use crate::cancel_cmds::CancelableCommands;
 use grammers_client::{
     types::{Chat, Message},
     Client, Update,
@@ -6,13 +6,14 @@ use grammers_client::{
 use std::sync::{Arc, Mutex};
 
 mod ping;
+mod release;
 
 type Result = std::result::Result<(), Box<dyn std::error::Error>>;
 
 enum Command {
     Help,
     Ping,
-    Release(String),
+    Release(Vec<String>),
     Start,
 }
 
@@ -31,15 +32,19 @@ pub async fn handle_update(
     Ok(())
 }
 
-async fn handle_msg(client: Client, message: Message, tasks: Arc<Mutex<CancelableCommands>>) -> Result {
+async fn handle_msg(
+    client: Client,
+    message: Message,
+    tasks: Arc<Mutex<CancelableCommands>>,
+) -> Result {
     let msg = message.text();
     let chat = message.chat();
     let cmd = msg.split_whitespace().next().unwrap();
-    let args = msg.split_whitespace().skip(1).collect::<Vec<_>>();
+    let args = msg.split(" ").into_iter().map(|s| s.into()).collect();
     let cmd = match cmd {
         "/help" => Command::Help,
         "/ping" => Command::Ping,
-        "/release" => Command::Release(args.join(" ")),
+        "/release" => Command::Release(args),
         "/start" => Command::Start,
         _ => return Ok(()),
     };
@@ -54,15 +59,8 @@ async fn handle_msg(client: Client, message: Message, tasks: Arc<Mutex<Cancelabl
             /start - Check if I'm alive\n";
             client.send_message(chat, help_msg).await?;
         }
-        Command::Ping => {
-            ping::ping(client, message).await?
-        }
-        Command::Release(release) => {
-            let id = rand::random::<i32>();
-            add_cmds(&tasks, &id);
-            client.send_message(chat, format!("Creating a release post for you with {:?}", release)).await?;
-            drop_cmds(&tasks, &id);
-        }
+        Command::Ping => ping::ping(client, message).await?,
+        Command::Release(links) => release::release(client, message, tasks, links).await?,
         Command::Start => {
             client.send_message(chat, "Hello!").await?;
         }
