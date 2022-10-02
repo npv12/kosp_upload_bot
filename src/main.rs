@@ -1,6 +1,7 @@
 use simple_logger::SimpleLogger;
 use tokio::runtime;
 
+mod cancel_cmds;
 mod cfg;
 mod plugins;
 mod telegram;

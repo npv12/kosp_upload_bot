@@ -909,6 +909,7 @@ dependencies = [
  "grammers-client",
  "grammers-session",
  "log",
+ "rand",
  "serde",
  "simple_logger",
  "tokio",
