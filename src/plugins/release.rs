@@ -9,12 +9,12 @@ pub async fn release(
     mut cancel_cmds: CancelableCommands,
     links: Vec<String>,
 ) -> Result {
-    let id = rand::random::<i32>();
+    let id = rand::random::<u32>();
     cancel_cmds.insert(id);
     let mut msg = client
         .send_message(
             message.chat(),
-            format!("Creating a release post for you with {:?}", links),
+            format!("Creating a release post for you with {:?}\nUse `/cancel {}` to cancel it", links, id),
         )
         .await?;
 
