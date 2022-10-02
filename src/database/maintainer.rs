@@ -1,6 +1,5 @@
-use std::error::Error;
-
 use bson::doc;
+use std::error::Error;
 
 use super::Db;
 

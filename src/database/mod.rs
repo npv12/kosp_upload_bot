@@ -4,7 +4,7 @@ use mongodb::{
     options::{ClientOptions, ResolverConfig},
     Client, Database,
 };
-mod add_maintainer;
+mod maintainer;
 
 #[derive(Clone)]
 pub struct Db {
