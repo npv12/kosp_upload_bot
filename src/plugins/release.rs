@@ -18,6 +18,11 @@ pub async fn release(
         )
         .await?;
 
+    if cancel_cmds.get_cancel_status(id) {
+        msg.edit(format!("Process cancelled by user")).await?;
+        return Ok(());
+    }
+
     msg.edit(format!("Successfully created a release post"))
         .await?;
     cancel_cmds.remove(id);

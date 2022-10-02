@@ -27,9 +27,12 @@ impl CancelableCommands {
         guard.insert(id, true);
         self.unlock(guard);
     }
-    // pub fn get_cancel_status(&self, id: i32) -> bool {
-    //     self.cancel_cmds.get(&id).unwrap().clone()
-    // }
+    pub fn get_cancel_status(&self, id: i32) -> bool {
+        let guard = self.lock();
+        let status = guard.get(&id).unwrap_or(&false).clone();
+        self.unlock(guard);
+        status
+    }
     pub fn new() -> Self {
         Self {
             cancel_cmds: Arc::new(Mutex::new(HashMap::new())),
