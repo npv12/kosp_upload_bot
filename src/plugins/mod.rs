@@ -5,12 +5,14 @@ use grammers_client::{
 };
 use std::sync::{Arc, Mutex};
 
+mod cancel;
 mod ping;
 mod release;
 
 type Result = std::result::Result<(), Box<dyn std::error::Error>>;
 
 enum Command {
+    Cancel(String),
     Help,
     Ping,
     Release(Vec<String>),
@@ -42,6 +44,7 @@ async fn handle_msg(
     let cmd = msg.split_whitespace().next().unwrap();
     let args = msg.split(" ").into_iter().map(|s| s.into()).collect();
     let cmd = match cmd {
+        "/cancel" => Command::Cancel(cmd.to_string()),
         "/help" => Command::Help,
         "/ping" => Command::Ping,
         "/release" => Command::Release(args),
@@ -50,6 +53,7 @@ async fn handle_msg(
     };
 
     match cmd {
+        Command::Cancel(cmd) => cancel::cancel(client, message, tasks, cmd).await?,
         Command::Help => {
             let help_msg = "Hello! I'm Flamingo upload bot. I can upload files to your server. \
             These are the available commands:\n\

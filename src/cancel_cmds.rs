@@ -13,9 +13,9 @@ impl CancelableCommands {
     pub fn cancel_cmd(&mut self, id: i32) {
         self.cancel_cmds.insert(id, true);
     }
-    pub fn get_cancel_status(&self, id: i32) -> bool {
-        self.cancel_cmds.get(&id).unwrap().clone()
-    }
+    // pub fn get_cancel_status(&self, id: i32) -> bool {
+    //     self.cancel_cmds.get(&id).unwrap().clone()
+    // }
     pub fn new() -> Self {
         Self {
             cancel_cmds: HashMap::new(),
@@ -41,7 +41,7 @@ pub fn drop_cmds(tasks: &Arc<Mutex<CancelableCommands>>, id: &i32) {
     drop(my_task);
 }
 
-pub fn cancel_cmd(tasks: &Arc<Mutex<CancelableCommands>>, id: &i32) {
+pub fn cancel_cmds(tasks: &Arc<Mutex<CancelableCommands>>, id: &i32) {
     let mut my_task = tasks.lock().unwrap();
     my_task.cancel_cmd(*id);
     log::debug!("Tasks: {:?}", my_task.cancel_cmds);

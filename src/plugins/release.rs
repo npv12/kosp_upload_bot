@@ -13,8 +13,12 @@ pub async fn release(
     let id = rand::random::<i32>();
     add_cmds(&cancel_cmd, &id);
     let mut msg = client
-        .send_message(message.chat(), "Creating a release post for you")
+        .send_message(
+            message.chat(),
+            format!("Creating a release post for you with {:?}", links),
+        )
         .await?;
+
     msg.edit(format!("Successfully created a release post"))
         .await?;
     drop_cmds(&cancel_cmd, &id);
