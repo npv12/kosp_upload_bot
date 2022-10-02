@@ -17,6 +17,7 @@ enum Command {
     Ping,
     PromoteMaintainer(),
     Release(Vec<String>),
+    RemoveMaintainer(),
     Start,
 }
 
@@ -37,6 +38,7 @@ pub async fn handle_msg(
         "/ping" => Command::Ping,
         "/promote" => Command::PromoteMaintainer(),
         "/release" => Command::Release(args),
+        "/remove" => Command::RemoveMaintainer(),
         "/start" => Command::Start,
         _ => return Ok(()),
     };
@@ -61,6 +63,9 @@ pub async fn handle_msg(
         }
         Command::Release(links) => {
             release::release(client, message, cancel_cmds, links, database).await?
+        }
+        Command::RemoveMaintainer() => {
+            maintainer::remove_maintainer(client, message, database).await?
         }
         Command::Start => {
             client.send_message(chat, "Hello!").await?;

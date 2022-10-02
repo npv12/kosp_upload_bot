@@ -39,6 +39,25 @@ impl Db {
         Ok(())
     }
 
+    pub async fn remove_maintainer(&self, user_id: i64) -> Result<(), Box<dyn Error>> {
+        let is_admin = self.is_admin(user_id).await?;
+        if !is_admin {
+            log::error!("User is not an admin");
+            return Ok(());
+        }
+        let collection: Collection<bson::Document> = self.db.collection("maintainer");
+        let filter: bson::Document = doc! { "user_id": user_id };
+        let found_col = collection.find_one(filter.clone(), None).await?;
+
+        if found_col != None {
+            log::info!("Removing the user");
+            collection.delete_one(filter.clone(), None).await?;
+        } else {
+            log::error!("User is not a maintainer");
+        }
+        Ok(())
+    }
+
     pub async fn is_maintainer(
         &self,
         user_id: i64,
