@@ -1,5 +1,4 @@
 use bson::doc;
-use mongodb::Collection;
 use std::error::Error;
 
 use super::Db;
@@ -16,14 +15,15 @@ impl Db {
             log::error!("User is not an admin");
             return Ok(());
         }
-        let collection = self.db.collection("maintainer");
         let filter = doc! { "user_id": user_id };
-        let found_col = collection.find_one(filter.clone(), None).await?;
+        let found_col = self.collection.find_one(filter.clone(), None).await?;
 
         if found_col != None {
             log::warn!("User is already a maintainer. So, adding device to the list");
             let update = doc! { "$push": { "devices": device }, "$set": { "is_maintainer": true } };
-            collection.update_one(filter.clone(), update, None).await?;
+            self.collection
+                .update_one(filter.clone(), update, None)
+                .await?;
         } else {
             log::warn!("User is not a maintainer. So, adding user to the list");
             let doc = doc! {
@@ -34,7 +34,7 @@ impl Db {
                 "devices": [device],
                 "support_group": ""
             };
-            collection.insert_one(doc, None).await?;
+            self.collection.insert_one(doc, None).await?;
         }
         Ok(())
     }
@@ -45,14 +45,15 @@ impl Db {
             log::error!("User is not an admin");
             return Ok(());
         }
-        let collection: Collection<bson::Document> = self.db.collection("maintainer");
         let filter: bson::Document = doc! { "user_id": user_id, "is_maintainer": true };
-        let found_col = collection.find_one(filter.clone(), None).await?;
+        let found_col = self.collection.find_one(filter.clone(), None).await?;
 
         if found_col != None {
             log::info!("Removing the user");
             let update = doc! {  "$set": { "is_maintainer": false } };
-            collection.update_one(filter.clone(), update, None).await?;
+            self.collection
+                .update_one(filter.clone(), update, None)
+                .await?;
         } else {
             log::error!("User is not a maintainer");
         }
@@ -64,9 +65,9 @@ impl Db {
         user_id: i64,
         device_name: &str,
     ) -> Result<bool, Box<dyn Error>> {
-        let collection: Collection<bson::Document> = self.db.collection("maintainer");
         let filter: bson::Document = doc! { "user_id": user_id, "is_maintainer": true };
-        let found_col: Option<bson::Document> = collection.find_one(filter.clone(), None).await?;
+        let found_col: Option<bson::Document> =
+            self.collection.find_one(filter.clone(), None).await?;
 
         if found_col != None {
             let data = found_col.unwrap();

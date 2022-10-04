@@ -1,8 +1,9 @@
 use std::sync::Arc;
 
+use bson::Document;
 use mongodb::{
     options::{ClientOptions, ResolverConfig},
-    Client, Database,
+    Client, Collection,
 };
 
 mod admin;
@@ -11,7 +12,7 @@ mod support_group;
 
 #[derive(Clone)]
 pub struct Db {
-    db: Arc<Database>,
+    collection: Arc<Collection<Document>>,
 }
 
 impl Db {
@@ -21,7 +22,7 @@ impl Db {
             .unwrap();
         let client = Client::with_options(options).unwrap();
         Self {
-            db: Arc::new(client.database("kosp")),
+            collection: Arc::new(client.database("kosp").collection("maintainer")),
         }
     }
 }
