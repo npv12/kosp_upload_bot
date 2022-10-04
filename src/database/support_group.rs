@@ -25,17 +25,19 @@ impl Db {
         Ok(())
     }
 
-    pub async fn _get_support_group(
-        &self,
-        user_id: i64,
-    ) -> Result<String, Box<dyn Error>> {
+    pub async fn _get_support_group(&self, user_id: i64) -> Result<String, Box<dyn Error>> {
         let collection: Collection<bson::Document> = self.db.collection("maintainer");
         let filter: bson::Document = doc! { "user_id": user_id, "is_maintainer": true };
         let found_col: Option<bson::Document> = collection.find_one(filter.clone(), None).await?;
 
         if found_col != None {
             let data = found_col.unwrap();
-            let support_group = data.get("support_group").unwrap().as_str().unwrap().to_string();
+            let support_group = data
+                .get("support_group")
+                .unwrap()
+                .as_str()
+                .unwrap()
+                .to_string();
             Ok(support_group)
         } else {
             log::error!("User is not a maintainer");

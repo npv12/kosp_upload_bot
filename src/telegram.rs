@@ -1,8 +1,4 @@
-use crate::{
-    cancel_cmds::CancelableCommands,
-    cfg,
-    plugins, database,
-};
+use crate::{cancel_cmds::CancelableCommands, cfg, database, plugins};
 use grammers_client::{
     types::{Chat, Message},
     Client, Config, InitParams, Update,
@@ -55,12 +51,7 @@ pub async fn async_main() -> Result {
         let cmd = cancel_cmds.clone();
         let db_clone = db.clone();
         task::spawn(async move {
-            match handle_update(
-                handle,
-                update,
-                cmd, db_clone)
-            .await
-            {
+            match handle_update(handle, update, cmd, db_clone).await {
                 Ok(_) => {}
                 Err(e) => log::error!("Error handling updates!: {}", e),
             }
@@ -88,7 +79,8 @@ async fn handle_update(
 }
 
 fn check_privilages(message: &Message) -> bool {
-    let prvt_grp = matches!(message.chat(), Chat::Group(_)) && matches!(message.chat().id(), 1599684071);
+    let prvt_grp =
+        matches!(message.chat(), Chat::Group(_)) && matches!(message.chat().id(), 1599684071);
     let is_dm = matches!(message.chat(), Chat::User(_));
     return !message.outgoing() && (prvt_grp || is_dm);
 }

@@ -10,10 +10,7 @@ pub async fn promote_maintainer(
 ) -> Result {
     if message.reply_to_message_id() == None {
         client
-            .send_message(
-                message.chat(),
-                "You didn't reply to a message",
-            )
+            .send_message(message.chat(), "You didn't reply to a message")
             .await?;
         return Ok(());
     }
@@ -22,20 +19,21 @@ pub async fn promote_maintainer(
     let reply_msgs = client
         .get_messages_by_id(
             message.chat(),
-            &message.reply_to_message_id().into_iter().map(|s|s.into()).collect::<Vec<i32>>(),
+            &message
+                .reply_to_message_id()
+                .into_iter()
+                .map(|s| s.into())
+                .collect::<Vec<i32>>(),
         )
         .await?;
 
     let reply_msg = reply_msgs.get(0).unwrap();
     let maintainer_id = reply_msg.clone().unwrap().sender().unwrap().id();
 
-   database.promote_admin(maintainer_id).await?;
+    database.promote_admin(maintainer_id).await?;
 
     client
-        .send_message(
-            message.chat(),
-            format!("Successfully added as an admin"),
-        )
+        .send_message(message.chat(), format!("Successfully added as an admin"))
         .await?;
     return Ok(());
 }

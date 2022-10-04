@@ -5,11 +5,8 @@ use std::error::Error;
 use super::Db;
 
 impl Db {
-    pub async fn promote_admin(
-        &self,
-        user_id: i64,
-    ) -> Result<(), Box<dyn Error>> {
-        let is_admin =  self.is_admin(user_id).await?;
+    pub async fn promote_admin(&self, user_id: i64) -> Result<(), Box<dyn Error>> {
+        let is_admin = self.is_admin(user_id).await?;
         if !is_admin {
             log::error!("User is not an admin");
             return Ok(());
@@ -28,10 +25,7 @@ impl Db {
         Ok(())
     }
 
-    pub async fn is_admin(
-        &self,
-        user_id: i64,
-    ) -> Result<bool, Box<dyn Error>> {
+    pub async fn is_admin(&self, user_id: i64) -> Result<bool, Box<dyn Error>> {
         let collection: Collection<bson::Document> = self.db.collection("maintainer");
         let filter: bson::Document = doc! { "user_id": user_id, "is_admin": true };
 

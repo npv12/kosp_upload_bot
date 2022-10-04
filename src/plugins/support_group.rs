@@ -4,7 +4,12 @@ use crate::database::Db;
 
 type Result = std::result::Result<(), Box<dyn std::error::Error>>;
 
-pub async fn add_support_group(client: Client, message: Message, database: Db, msg: String) -> Result {
+pub async fn add_support_group(
+    client: Client,
+    message: Message,
+    database: Db,
+    msg: String,
+) -> Result {
     // Sanity checks
     let cmds = msg
         .split(" ")

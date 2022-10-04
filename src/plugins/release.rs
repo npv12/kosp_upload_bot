@@ -15,7 +15,9 @@ pub async fn release(
     let is_maintainer = database.is_maintainer(user_id, "guacamole").await?;
     if !is_admin && !is_maintainer {
         log::error!("User is not an admin ot a maintainer");
-        client.send_message(message.chat(), "You are not a maintainer").await?;
+        client
+            .send_message(message.chat(), "You are not a maintainer")
+            .await?;
         return Ok(());
     }
     if links.len() < 2 {

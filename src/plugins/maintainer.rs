@@ -18,19 +18,13 @@ pub async fn add_maintainer(
 
     if cmds.len() < 2 {
         client
-            .send_message(
-                message.chat(),
-                "You didn't provide a device name",
-            )
+            .send_message(message.chat(), "You didn't provide a device name")
             .await?;
         return Ok(());
     }
     if message.reply_to_message_id() == None {
         client
-            .send_message(
-                message.chat(),
-                "You didn't reply to a message",
-            )
+            .send_message(message.chat(), "You didn't reply to a message")
             .await?;
         return Ok(());
     }
@@ -39,17 +33,29 @@ pub async fn add_maintainer(
     let reply_msgs = client
         .get_messages_by_id(
             message.chat(),
-            &message.reply_to_message_id().into_iter().map(|s|s.into()).collect::<Vec<i32>>(),
+            &message
+                .reply_to_message_id()
+                .into_iter()
+                .map(|s| s.into())
+                .collect::<Vec<i32>>(),
         )
         .await?;
 
     let reply_msg = reply_msgs.get(0).unwrap();
 
-    let maintainer_name =  reply_msg.clone().unwrap().sender().unwrap().name().to_string();
+    let maintainer_name = reply_msg
+        .clone()
+        .unwrap()
+        .sender()
+        .unwrap()
+        .name()
+        .to_string();
     let device_name = cmds[1].to_string();
     let maintainer_id = reply_msg.clone().unwrap().sender().unwrap().id();
 
-   database.add_maintainer(maintainer_name, maintainer_id, device_name).await?;
+    database
+        .add_maintainer(maintainer_name, maintainer_id, device_name)
+        .await?;
 
     client
         .send_message(
@@ -60,18 +66,11 @@ pub async fn add_maintainer(
     return Ok(());
 }
 
-pub async fn remove_maintainer(
-    client: Client,
-    message: Message,
-    database: database::Db,
-) -> Result {
+pub async fn remove_maintainer(client: Client, message: Message, database: database::Db) -> Result {
     // Sanity checks
     if message.reply_to_message_id() == None {
         client
-            .send_message(
-                message.chat(),
-                "You didn't reply to a message",
-            )
+            .send_message(message.chat(), "You didn't reply to a message")
             .await?;
         return Ok(());
     }
@@ -80,7 +79,11 @@ pub async fn remove_maintainer(
     let reply_msgs = client
         .get_messages_by_id(
             message.chat(),
-            &message.reply_to_message_id().into_iter().map(|s|s.into()).collect::<Vec<i32>>(),
+            &message
+                .reply_to_message_id()
+                .into_iter()
+                .map(|s| s.into())
+                .collect::<Vec<i32>>(),
         )
         .await?;
 
@@ -88,13 +91,10 @@ pub async fn remove_maintainer(
 
     let maintainer_id = reply_msg.clone().unwrap().sender().unwrap().id();
 
-   database.remove_maintainer(maintainer_id).await?;
+    database.remove_maintainer(maintainer_id).await?;
 
     client
-        .send_message(
-            message.chat(),
-            format!("Successfully removed a maintainer"),
-        )
+        .send_message(message.chat(), format!("Successfully removed a maintainer"))
         .await?;
     return Ok(());
 }

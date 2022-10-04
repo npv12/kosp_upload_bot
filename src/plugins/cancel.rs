@@ -9,7 +9,11 @@ pub async fn cancel(
     mut cancel_cmds: CancelableCommands,
     msg: String,
 ) -> Result {
-    let cmds = msg.split(" ").into_iter().map(|s| s.into()).collect::<Vec<String>>();
+    let cmds = msg
+        .split(" ")
+        .into_iter()
+        .map(|s| s.into())
+        .collect::<Vec<String>>();
     if cmds.len() < 2 {
         client
             .send_message(message.chat(), "You didn't provide a command id")

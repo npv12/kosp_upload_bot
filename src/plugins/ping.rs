@@ -1,6 +1,6 @@
 use std::time::SystemTime;
 
-use grammers_client::{Client, types::Message};
+use grammers_client::{types::Message, Client};
 
 type Result = std::result::Result<(), Box<dyn std::error::Error>>;
 

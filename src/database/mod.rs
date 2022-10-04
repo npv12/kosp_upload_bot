@@ -20,6 +20,8 @@ impl Db {
             .await
             .unwrap();
         let client = Client::with_options(options).unwrap();
-        Self { db: Arc::new(client.database("kosp")) }
+        Self {
+            db: Arc::new(client.database("kosp")),
+        }
     }
 }
