@@ -4,6 +4,7 @@ use tokio::runtime;
 mod cancel_cmds;
 mod cfg;
 mod database;
+mod document_processor;
 mod plugins;
 mod telegram;
 

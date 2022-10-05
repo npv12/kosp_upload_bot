@@ -5,6 +5,7 @@ authors = ["Pranav <npv12@iitbbs.ac.in>"]
 edition = "2021"
 
 [dependencies]
+async-trait = "0.1.57"
 bson = { version = "2.4.0", features = ["chrono-0_4"] }
 chrono = "0.4"
 grammers-client = { git = "https://github.com/Lonami/grammers" }
